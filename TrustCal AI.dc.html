@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#5A3828"/><g fill="#F8F7F2" font-family="sans-serif"><text x="30" y="115" font-size="60" font-weight="800">TC</text></g></svg></template>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;-webkit-font-smoothing:antialiased}
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-thumb{background:rgba(120,120,120,.3);border-radius:8px}
+  a{color:inherit}
+  @keyframes tc-spin{to{transform:rotate(360deg)}}
+  @keyframes tc-pop{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+  @keyframes tc-dot{0%,80%,100%{opacity:.25}40%{opacity:1}}
+</style>
+</helmet>
+
+<div ref="{{rootRef}}" style="height:100vh;width:100%;display:flex;overflow:hidden;background:{{T.bg}};color:{{T.textPrimary}};font-family:'Plus Jakarta Sans',Inter,system-ui,sans-serif;position:relative;box-sizing:border-box">
+
+<sc-if value="{{isStudentRole}}" hint-placeholder-val="{{true}}">
+<!-- LEFT SIDEBAR -->
+<sc-if value="{{showLeftSidebar}}" hint-placeholder-val="{{true}}">
+<div style="width:264px;flex-shrink:0;display:flex;flex-direction:column;height:100%;background:{{T.surface}};border-right:1px solid {{T.border}};padding:18px 14px;box-sizing:border-box;gap:16px;overflow:hidden">
+
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 4px">
+    <div style="display:flex;align-items:center;gap:9px">
+      <div style="width:32px;height:32px;border-radius:10px;background:{{T.primary}};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{T.primaryText}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg>
+      </div>
+      <div style="font-weight:800;font-size:16px;letter-spacing:-.2px">TrustCal AI</div>
+    </div>
+    <button onClick="{{switchToTeacher}}" title="Switch to Teacher view" style="width:30px;height:30px;border-radius:8px;border:1px solid {{T.border}};background:transparent;color:{{T.textSecondary}};display:flex;align-items:center;justify-content:center;cursor:pointer;margin-right:6px" style-hover="background:{{T.surfaceSecondary}}">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2.7 2 6 2s6-.9 6-2v-5"/></svg>
+    </button>
+    <button onClick="{{toggleTheme}}" style="width:30px;height:30px;border-radius:8px;border:1px solid {{T.border}};background:transparent;color:{{T.textSecondary}};display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:{{T.surfaceSecondary}}" title="Toggle theme">
+      <sc-if value="{{isDark}}" hint-placeholder-val="{{false}}">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </sc-if>
+      <sc-if value="{{notDark}}" hint-placeholder-val="{{true}}">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </sc-if>
+    </button>
+  </div>
+
+  <button onClick="{{newChat}}" style="width:100%;background:{{T.primary}};color:{{T.primaryText}};border:none;border-radius:12px;padding:10px 14px;font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:{{T.shadowSm}}" style-hover="background:{{T.primaryHover}}">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    New Chat
+  </button>
+
+  <div style="display:flex;flex-direction:column;gap:16px;flex:1;min-height:0;overflow-y:auto">
+  <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 4px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.06em;color:{{T.textTertiary}};text-transform:uppercase">Folders</div>
+      <button onClick="{{addFolder}}" style="background:none;border:none;color:{{T.accent}};font-size:12px;font-weight:600;cursor:pointer;padding:2px" style-hover="text-decoration:underline">+ Add folder</button>
+    </div>
+    <sc-for list="{{folders}}" as="f" hint-placeholder-count="6">
+      <button onClick="{{f.select}}" style="display:flex;align-items:center;gap:8px;width:100%;background:{{f.bg}};border:none;border-radius:9px;padding:7px 8px;cursor:pointer;text-align:left" style-hover="background:{{T.surfaceSecondary}}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{T.accent}}" stroke-width="2" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        <span style="font-size:13px;font-weight:500;flex:1">{{f.name}}</span>
+        <span style="font-size:11px;color:{{T.textTertiary}}">{{f.count}}</span>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0">
+    <div style="font-size:11px;font-weight:700;letter-spacing:.06em;color:{{T.textTertiary}};text-transform:uppercase;padding:0 4px">Previous Chats</div>
+    <div style="position:relative">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="{{T.textTertiary}}" stroke-width="2" style="position:absolute;left:9px;top:50%;transform:translateY(-50%)"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>
+      <input value="{{sidebarQuery}}" onChange="{{setSidebarQuery}}" placeholder="Search chats" style="width:100%;box-sizing:border-box;background:{{T.surfaceSecondary}};border:1px solid {{T.border}};border-radius:9px;padding:7px 10px 7px 28px;font-size:12.5px;color:{{T.textPrimary}}" style-focus="outline:2px solid {{T.accent}};outline-offset:1px"/>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <sc-for list="{{filteredChats}}" as="c" hint-placeholder-count="6">
+        <button onClick="{{c.select}}" style="display:flex;flex-direction:column;gap:1px;width:100%;background:{{c.bg}};border:none;border-left:2.5px solid {{c.stripe}};border-radius:8px;padding:8px 9px;cursor:pointer;text-align:left" style-hover="background:{{T.surfaceSecondary}}">
+          <span style="font-size:13px;font-weight:600;color:{{c.color}};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{c.title}}</span>
+          <span style="font-size:11px;color:{{T.textTertiary}}">{{c.date}}</span>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:6px;border-top:1px solid {{T.border}};padding-top:12px">
+    <button onClick="{{openCustomize}}" style="display:flex;align-items:center;gap:8px;width:100%;background:transparent;border:1px solid {{T.border}};border-radius:9px;padding:8px 10px;cursor:pointer;font-size:13px;font-weight:600;color:{{T.textSecondary}}" style-hover="background:{{T.surfaceSecondary}}">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Customize
+    </button>
+    <button onClick="{{goProfile}}" style="display:flex;align-items:center;gap:9px;width:100%;background:{{profileRowBg}};border:none;border-radius:9px;padding:7px 8px;cursor:pointer;text-align:left" style-hover="background:{{T.surfaceSecondary}}">
+      <div style="width:26px;height:26px;border-radius:50%;background:{{T.accentSoft}};color:{{T.accent}};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">AR</div>
+      <span style="font-size:13px;font-weight:600">Profile</span>
+    </button>
+    <button onClick="{{goSettings}}" style="display:flex;align-items:center;gap:9px;width:100%;background:{{settingsRowBg}};border:none;border-radius:9px;padding:7px 8px;cursor:pointer;text-align:left" style-hover="background:{{T.surfaceSecondary}}">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{T.textSecondary}}" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span style="font-size:13px;font-weight:600;color:{{T.textSecondary}}">Settings</span>
+    </button>
+  </div>
+</div>
+</sc-if>
+
+<!-- CENTER -->
+<div style="flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;height:100%;position:relative">
+
+  <sc-if value="{{isChatView}}" hint-placeholder-val="{{true}}">
+    <div style="display:flex;flex-direction:column;flex:1;min-height:0;min-width:0">
+      <!-- Chat header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid {{T.border}};background:{{T.surface}};flex-shrink:0;gap:16px">
+        <div style="min-width:0">
+          <div style="font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{activeChatTitle}}</div>
+          <div style="font-size:12px;color:{{T.textTertiary}};font-weight:500">Study session · Renal system</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <button onClick="{{switchToTeacher}}" style="display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:9px;border:1px solid {{T.border}};background:{{T.surface}};color:{{T.textSecondary}};font-size:13px;font-weight:600;cursor:pointer" style-hover="background:{{T.surfaceSecondary}}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2.7 2 6 2s6-.9 6-2v-5"/></svg>
+            Teacher view
+          </button>
+          <button onClick="{{openAudiobook}}" style="display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:9px;border:1px solid {{T.border}};background:{{T.surface}};color:{{T.textSecondary}};font-size:13px;font-weight:600;cursor:pointer" style-hover="background:{{T.surfaceSecondary}}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+            Audiobook
+          </button>
+          <div style="display:flex;background:{{T.surfaceSecondary}};border-radius:11px;padding:3px;gap:2px">
+            <button onClick="{{setStudyMode}}" style="padding:8px 16px;border-radius:9px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:{{studyBtnBg}};color:{{studyBtnColor}}">Study Mode</button>
+            <button onClick="{{setPracticeMode}}" style="padding:8px 16px;border-radius:9px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:{{practiceBtnBg}};color:{{practiceBtnColor}}">Practice Mode</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STUDY MODE -->
+      <sc-if value="{{isStudyMode}}" hint-placeholder-val="{{true}}">
+        <div style="flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:18px;min-width:0">
+
+          <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+            <span style="font-size:12px;color:{{T.textTertiary}};font-weight:600">Selected resources:</span>
+            <sc-for list="{{selectedResourceChips}}" as="chip" hint-placeholder-count="3">
+              <span style="background:{{T.chipBg}};color:{{T.textSecondary}};font-size:12px;font-weight:600;padding:5px 10px;border-radius:8px;border:1px solid {{T.border}}">{{chip}}</span>
+            </sc-for>
+          </div>
+
+          <sc-for list="{{messages}}" as="m" hint-placeholder-count="2">
+            <sc-if value="{{m.isUser}}" hint-placeholder-val="{{false}}">
+              <div style="align-self:flex-end;max-width:70%;background:{{T.accentSoft}};color:{{T.textPrimary}};padding:12px 16px;border-radius:16px 16px 4px 16px;font-size:14.5px;line-height:1.5;font-weight:500">{{m.text}}</div>
+            </sc-if>
+            <sc-if value="{{m.isAi}}" hint-placeholder-val="{{true}}">
+              <div style="display:flex;gap:12px;align-items:flex-start;max-width:88%">
+                <div style="width:30px;height:30px;border-radius:9px;background:{{T.primary}};flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{T.primaryText}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:12px;min-width:0;flex:1">
+                  <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:4px 16px 16px 16px;padding:14px 16px;box-shadow:{{T.shadowSm}}">
+                    <div style="font-size:14.5px;line-height:1.65;white-space:pre-line">{{m.text}}</div>
+                    <button onClick="{{m.listen}}" style="margin-top:10px;display:inline-flex;align-items:center;gap:6px;background:{{T.accentSoft}};color:{{T.accent}};border:none;border-radius:20px;padding:5px 11px;font-size:12px;font-weight:700;cursor:pointer">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><polygon points="6 4 20 12 6 20"/></svg>
+                      Listen to this reply
+                    </button>
+                  </div>
+
+                  <sc-if value="{{m.showTrust}}" hint-placeholder-val="{{true}}">
+                    <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:{{T.textTertiary}};font-style:italic">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11z"/></svg>
+                      Educational use only — verify against your selected sources and current clinical guidance.
+                    </div>
+                  </sc-if>
+
+                  <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:14px 16px;box-shadow:{{T.shadowSm}}">
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                      <div style="font-size:12px;font-weight:700;letter-spacing:.04em;color:{{T.textTertiary}};text-transform:uppercase">AI Confidence</div>
+                      <button onClick="{{m.toggleConfidence}}" style="background:none;border:none;color:{{T.textTertiary}};cursor:pointer;display:flex;padding:0" title="What does confidence mean?">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><circle cx="12" cy="7.5" r=".6" fill="currentColor"/></svg>
+                      </button>
+                    </div>
+                    <div style="display:flex;align-items:baseline;gap:8px;margin-top:6px">
+                      <span style="font-size:22px;font-weight:800;color:{{T.accent}}">{{m.confidence}}%</span>
+                    </div>
+                    <div style="height:7px;border-radius:4px;background:{{T.surfaceSecondary}};margin-top:8px;overflow:hidden">
+                      <div style="height:100%;border-radius:4px;background:{{T.accent}};width:{{m.confidenceWidth}}"></div>
+                    </div>
+                    <div style="font-size:11.5px;color:{{T.textTertiary}};margin-top:6px">Based on the selected educational resources.</div>
+                    <sc-if value="{{m.confidenceOpen}}" hint-placeholder-val="{{false}}">
+                      <div style="margin-top:10px;padding-top:10px;border-top:1px solid {{T.border}};font-size:12px;color:{{T.textSecondary}};line-height:1.5">Confidence reflects how strongly the system's retrieved evidence supports this response. It is not a substitute for clinical judgment.</div>
+                    </sc-if>
+                  </div>
+
+                  <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:14px 16px;box-shadow:{{T.shadowSm}}">
+                    <div style="font-size:12px;font-weight:700;letter-spacing:.04em;color:{{T.textTertiary}};text-transform:uppercase;margin-bottom:8px">Sources used for this answer</div>
+                    <div style="display:flex;flex-direction:column;gap:6px">
+                      <sc-for list="{{m.sources}}" as="src" hint-placeholder-count="4">
+                        <button onClick="{{src.open}}" style="display:flex;align-items:center;gap:9px;width:100%;background:transparent;border:1px solid {{T.border}};border-radius:9px;padding:8px 10px;cursor:pointer;text-align:left" style-hover="background:{{T.surfaceSecondary}}">
+                          <span style="font-size:15px">{{src.icon}}</span>
+                          <span style="font-size:13px;font-weight:600;flex:1;color:{{T.textPrimary}}">{{src.title}}</span>
+                          <span style="font-size:11px;color:{{T.textTertiary}};font-weight:600">{{src.type}}</span>
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="{{T.textTertiary}}" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                        </button>
+                      </sc-for>
+                    </div>
+                  </div>
+
+                  <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;overflow:hidden;box-shadow:{{T.shadowSm}}">
+                    <button onClick="{{m.toggleHow}}" style="display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;padding:12px 16px;cursor:pointer;text-align:left">
+                      <span style="font-size:12px;font-weight:700;letter-spacing:.04em;color:{{T.textTertiary}};text-transform:uppercase">How this answer was generated</span>
+                      <span style="color:{{T.textTertiary}};transform:{{m.howArrow}};transition:transform .15s">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                      </span>
+                    </button>
+                    <sc-if value="{{m.howOpen}}" hint-placeholder-val="{{false}}">
+                      <div style="padding:2px 18px 16px 18px;display:flex;flex-direction:column">
+                        <sc-for list="{{howSteps}}" as="st" hint-placeholder-count="5">
+                          <div style="display:flex;gap:12px">
+                            <div style="display:flex;flex-direction:column;align-items:center">
+                              <div style="width:9px;height:9px;border-radius:50%;background:{{T.accent}};margin-top:5px;flex-shrink:0"></div>
+                              <div style="width:2px;flex:1;background:{{T.border}}"></div>
+                            </div>
+                            <div style="font-size:13px;color:{{T.textSecondary}};padding-bottom:14px;font-weight:500">{{st.label}}</div>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+          </sc-for>
+
+          <sc-if value="{{isTyping}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;gap:12px;align-items:center">
+              <div style="width:30px;height:30px;border-radius:9px;background:{{T.primary}};flex-shrink:0"></div>
+              <div style="display:flex;gap:4px;padding:12px 16px;background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px">
+                <div style="width:6px;height:6px;border-radius:50%;background:{{T.textTertiary}};animation:tc-dot 1.2s infinite"></div>
+                <div style="width:6px;height:6px;border-radius:50%;background:{{T.textTertiary}};animation:tc-dot 1.2s infinite .2s"></div>
+                <div style="width:6px;height:6px;border-radius:50%;background:{{T.textTertiary}};animation:tc-dot 1.2s infinite .4s"></div>
+              </div>
+            </div>
+          </sc-if>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;padding-left:42px">
+            <sc-for list="{{suggestedActions}}" as="a" hint-placeholder-count="5">
+              <button onClick="{{a.run}}" style="background:{{T.surface}};border:1px solid {{T.border}};color:{{T.textSecondary}};font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:20px;cursor:pointer" style-hover="background:{{T.surfaceSecondary}};border-color:{{T.borderStrong}}">{{a.label}}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- Audiobook player -->
+        <sc-if value="{{audioOpen}}" hint-placeholder-val="{{false}}">
+          <div style="border-top:1px solid {{T.border}};background:{{T.surfaceSecondary}};padding:12px 24px;flex-shrink:0;display:flex;align-items:center;gap:14px">
+            <button onClick="{{audioTogglePlay}}" style="width:38px;height:38px;border-radius:50%;background:{{T.primary}};border:none;color:{{T.primaryText}};display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
+              <sc-if value="{{audioPlaying}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="4" width="5" height="16"/><rect x="14" y="4" width="5" height="16"/></svg></sc-if>
+              <sc-if value="{{audioNotPlaying}}" hint-placeholder-val="{{true}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg></sc-if>
+            </button>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:{{T.textTertiary}};margin-bottom:5px">
+                <span>Track {{audioTrackNum}} of {{audioTrackTotal}} · {{audioTrackLabel}}</span>
+                <span>{{audioSpeed}}×</span>
+              </div>
+              <div style="height:5px;border-radius:3px;background:{{T.border}};overflow:hidden"><div style="height:100%;background:{{T.accent}};width:{{audioProgressPct}}"></div></div>
+            </div>
+            <button onClick="{{audioPrev}}" style="background:none;border:none;color:{{T.textSecondary}};cursor:pointer;display:flex" title="Previous"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4" fill="currentColor"/><line x1="5" y1="19" x2="5" y2="5"/></svg></button>
+            <button onClick="{{audioNext}}" style="background:none;border:none;color:{{T.textSecondary}};cursor:pointer;display:flex" title="Next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20" fill="currentColor"/><line x1="19" y1="5" x2="19" y2="19"/></svg></button>
+            <button onClick="{{audioCycleSpeed}}" style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:7px;padding:5px 9px;font-size:11.5px;font-weight:700;color:{{T.textSecondary}};cursor:pointer">{{audioSpeed}}×</button>
+            <button onClick="{{closeAudiobook}}" style="background:none;border:none;color:{{T.textTertiary}};cursor:pointer;display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </sc-if>
+
+        <!-- Chat input -->
+        <div style="border-top:1px solid {{T.border}};background:{{T.surface}};padding:14px 24px;flex-shrink:0">
+          <div style="display:flex;align-items:flex-end;gap:8px;background:{{T.surfaceSecondary}};border:1px solid {{T.border}};border-radius:16px;padding:8px 10px">
+            <div style="display:flex;gap:4px;padding-bottom:2px">
+              <button style="width:30px;height:30px;border-radius:8px;border:none;background:none;color:{{T.textTertiary}};cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:{{T.surface}}" title="Attach">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a5 5 0 0 1-7.07-7.07l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.2 9.19a1.5 1.5 0 0 1-2.12-2.12l8.49-8.48"/></svg>
+              </button>
+              <button style="width:30px;height:30px;border-radius:8px;border:none;background:none;color:{{T.textTertiary}};cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:{{T.surface}}" title="Image">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              </button>
+              <button style="width:30px;height:30px;border-radius:8px;border:none;background:none;color:{{T.textTertiary}};cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:{{T.surface}}" title="Web search">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg>
+              </button>
+            </div>
+            <textarea value="{{draftMessage}}" onChange="{{setDraft}}" onKeyDown="{{onDraftKey}}" placeholder="Write your question here..." rows="1" style="flex:1;resize:none;border:none;background:none;outline:none;font-size:14px;font-family:inherit;color:{{T.textPrimary}};padding:7px 4px;max-height:120px"></textarea>
+            <button onClick="{{sendMessage}}" style="width:34px;height:34px;border-radius:50%;background:{{T.primary}};border:none;color:{{T.primaryText}};cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0" style-hover="background:{{T.primaryHover}}">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </sc-if>
+
+<!-- PRACTICE MODE -->
+      <sc-if value="{{isPracticeMode}}" hint-placeholder-val="{{false}}">
+        <div style="flex:1;overflow-y:auto;padding:24px 26px;display:flex;flex-direction:column;gap:16px">
+          <div>
+            <div style="font-size:18px;font-weight:800">Practice Mode</div>
+            <div style="font-size:13px;color:{{T.textTertiary}};margin-top:2px">Topic: {{practiceTopic}} · from {{practiceSourceNote}}</div>
+          </div>
+
+          <div style="display:flex;background:{{T.surfaceSecondary}};border-radius:11px;padding:3px;gap:2px;width:fit-content">
+            <button onClick="{{setExamSource}}" style="padding:8px 16px;border-radius:9px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:{{examSourceBg}};color:{{examSourceColor}}">📋 Exam Questions</button>
+            <button onClick="{{setAiSource}}" style="padding:8px 16px;border-radius:9px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:{{aiSourceBg}};color:{{aiSourceColor}}">✦ AI-Generated</button>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px;font-weight:600;color:{{T.textTertiary}}">Type</span>
+              <div style="display:flex;background:{{T.surfaceSecondary}};border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap">
+                <sc-for list="{{typeFilters}}" as="tf" hint-placeholder-count="6">
+                  <button onClick="{{tf.select}}" style="padding:6px 12px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:{{tf.bg}};color:{{tf.color}};white-space:nowrap">{{tf.label}}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px;font-weight:600;color:{{T.textTertiary}}">Difficulty</span>
+              <div style="display:flex;background:{{T.surfaceSecondary}};border-radius:10px;padding:3px;gap:2px">
+                <sc-for list="{{difficulties}}" as="d" hint-placeholder-count="4">
+                  <button onClick="{{d.select}}" style="padding:6px 12px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:{{d.bg}};color:{{d.color}}">{{d.label}}</button>
+                </sc-for>
+              </div>
+            </div>
+            <sc-if value="{{isExamSource}}" hint-placeholder-val="{{true}}">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:12px;font-weight:600;color:{{T.textTertiary}}">Sort</span>
+                <div style="display:flex;background:{{T.surfaceSecondary}};border-radius:10px;padding:3px;gap:2px">
+                  <sc-for list="{{sortOptions}}" as="so" hint-placeholder-count="2">
+                    <button onClick="{{so.select}}" style="padding:6px 12px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:{{so.bg}};color:{{so.color}}">{{so.label}}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px;font-weight:600;color:{{T.textTertiary}}">Status</span>
+              <div style="display:flex;background:{{T.surfaceSecondary}};border-radius:10px;padding:3px;gap:2px">
+                <sc-for list="{{answeredFilters}}" as="af" hint-placeholder-count="3">
+                  <button onClick="{{af.select}}" style="padding:6px 12px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:{{af.bg}};color:{{af.color}}">{{af.label}}</button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{questionList}}" as="q" hint-placeholder-count="5">
+              <div onClick="{{q.open}}" style="display:flex;gap:14px;background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:15px 16px;cursor:pointer;box-shadow:{{T.shadowSm}}" style-hover="border-color:{{T.borderStrong}}">
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+                  <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    <span style="font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:6px;background:{{T.chipBg}};color:{{T.textSecondary}}">{{q.typeLabel}}</span>
+                    <span style="font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:6px;background:{{q.diffBg}};color:{{q.diffColor}}">{{q.difficulty}}</span>
+                    <sc-if value="{{q.answered}}" hint-placeholder-val="{{false}}">
+                      <span style="font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:6px;background:{{T.accentSoft}};color:{{T.accent}}">✓ Answered</span>
+                    </sc-if>
+                  </div>
+                  <div style="font-size:14px;font-weight:600;line-height:1.5;color:{{T.textPrimary}};overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{q.question}}</div>
+                </div>
+                <div style="width:168px;flex-shrink:0;border-left:1px solid {{T.border}};padding-left:14px;display:flex;flex-direction:column;gap:7px">
+                  <sc-if value="{{q.isExam}}" hint-placeholder-val="{{true}}">
+                    <div>
+                      <div style="font-size:10px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase;letter-spacing:.03em">Appeared</div>
+                      <div style="font-size:12px;font-weight:600;margin-top:2px">{{q.yearsText}}</div>
+                    </div>
+                    <div>
+                      <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:{{T.textTertiary}}"><span>PROBABILITY</span><span>{{q.probability}}%</span></div>
+                      <div style="height:5px;border-radius:3px;background:{{T.surfaceSecondary}};margin-top:3px;overflow:hidden"><div style="height:100%;background:{{T.accent}};width:{{q.probabilityWidth}}"></div></div>
+                    </div>
+                    <span style="font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:6px;background:{{q.importanceBg}};color:{{q.importanceColor}};width:fit-content">{{q.importance}} priority</span>
+                  </sc-if>
+                  <sc-if value="{{q.isAi}}" hint-placeholder-val="{{false}}">
+                    <div style="font-size:11px;color:{{T.textSecondary}};line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical"><span style="font-weight:700;color:{{T.textTertiary}}">Why this matters — </span>{{q.whyItMatters}}</div>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+            <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:12px;padding:14px">
+              <div style="font-size:11px;color:{{T.textTertiary}};font-weight:600">Practice accuracy</div>
+              <div style="font-size:20px;font-weight:800;margin-top:4px">78%</div>
+            </div>
+            <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:12px;padding:14px">
+              <div style="font-size:11px;color:{{T.textTertiary}};font-weight:600">Topics mastered</div>
+              <div style="font-size:20px;font-weight:800;margin-top:4px">6</div>
+            </div>
+            <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:12px;padding:14px">
+              <div style="font-size:11px;color:{{T.textTertiary}};font-weight:600">Weak areas</div>
+              <div style="font-size:14px;font-weight:700;margin-top:5px;color:{{T.warning}}">Electrolytes</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- PRACTICE QUESTION MODAL -->
+      <sc-if value="{{hasPracticeModal}}" hint-placeholder-val="{{false}}">
+        <div onClick="{{closePracticeModal}}" style="position:fixed;inset:0;background:rgba(9,20,18,.5);display:flex;align-items:center;justify-content:center;z-index:55;padding:20px">
+          <div onClick="{{stop}}" style="background:{{T.surface}};border-radius:18px;width:100%;max-width:600px;max-height:88vh;overflow-y:auto;padding:24px;box-shadow:{{T.shadowMd}};animation:tc-pop .15s ease-out">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px">
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <span style="font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:6px;background:{{T.chipBg}};color:{{T.textSecondary}}">{{modalQ.typeLabel}}</span>
+                <span style="font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:6px;background:{{modalQ.diffBg}};color:{{modalQ.diffColor}}">{{modalQ.difficulty}}</span>
+              </div>
+              <button onClick="{{closePracticeModal}}" style="background:none;border:none;color:{{T.textTertiary}};cursor:pointer;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+
+            <sc-if value="{{modalQ.isExam}}" hint-placeholder-val="{{true}}">
+              <div style="display:flex;gap:16px;margin-bottom:14px;padding:10px 12px;background:{{T.surfaceSecondary}};border-radius:10px;flex-wrap:wrap">
+                <div><div style="font-size:10px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase">Appeared</div><div style="font-size:12.5px;font-weight:600;margin-top:2px">{{modalQ.yearsText}}</div></div>
+                <div><div style="font-size:10px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase">Probability</div><div style="font-size:12.5px;font-weight:600;margin-top:2px">{{modalQ.probability}}%</div></div>
+                <div><div style="font-size:10px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase">Priority</div><div style="font-size:12.5px;font-weight:600;margin-top:2px;color:{{modalQ.importanceColor}}">{{modalQ.importance}}</div></div>
+              </div>
+            </sc-if>
+            <sc-if value="{{modalQ.isAi}}" hint-placeholder-val="{{false}}">
+              <div style="margin-bottom:14px;padding:10px 12px;background:{{T.accentSoft}};border-radius:10px;font-size:12.5px;color:{{T.textSecondary}};line-height:1.55"><span style="font-weight:700;color:{{T.accent}}">Why this matters — </span>{{modalQ.whyItMatters}}</div>
+            </sc-if>
+
+            <div style="font-size:15px;font-weight:600;line-height:1.55;margin-bottom:16px">{{modalQ.question}}</div>
+
+            <sc-if value="{{modalQ.isShortAnswer}}" hint-placeholder-val="{{false}}">
+              <textarea value="{{shortAnswerDraft}}" onChange="{{setShortAnswerDraft}}" placeholder="Type your answer..." rows="4" style="width:100%;box-sizing:border-box;background:{{T.surfaceSecondary}};border:1px solid {{T.border}};border-radius:11px;padding:11px 13px;font-size:13.5px;font-family:inherit;color:{{T.textPrimary}};resize:none"></textarea>
+              <sc-if value="{{modalQ.notRevealed}}" hint-placeholder-val="{{true}}">
+                <button onClick="{{revealModelAnswer}}" style="margin-top:12px;background:{{T.primary}};color:{{T.primaryText}};border:none;border-radius:10px;padding:10px 18px;font-size:13.5px;font-weight:700;cursor:pointer">Reveal Model Answer</button>
+              </sc-if>
+              <sc-if value="{{modalQ.revealed}}" hint-placeholder-val="{{false}}">
+                <div style="margin-top:14px;padding-top:14px;border-top:1px solid {{T.border}}">
+                  <div style="font-size:12px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase;margin-bottom:6px">Model Answer</div>
+                  <div style="font-size:13.5px;color:{{T.textSecondary}};line-height:1.6">{{modalQ.modelAnswer}}</div>
+                  <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+                    <span style="font-size:11.5px;color:{{T.textTertiary}};font-weight:600">Sources:</span>
+                    <sc-for list="{{modalQ.sources}}" as="ms" hint-placeholder-count="2">
+                      <span style="font-size:11.5px;background:{{T.chipBg}};color:{{T.textSecondary}};padding:3px 8px;border-radius:7px;font-weight:600">{{ms.icon}} {{ms.title}}</span>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+            </sc-if>
+
+            <sc-if value="{{modalQ.hasOptions}}" hint-placeholder-val="{{true}}">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{modalQ.options}}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{o.select}}" disabled="{{modalQ.submitted}}" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:{{o.bg}};border:1.5px solid {{o.border}};border-radius:11px;padding:11px 13px;cursor:pointer;font-size:13.5px;color:{{o.color}};font-weight:500">
+                    <span style="width:20px;height:20px;border-radius:50%;border:1.5px solid {{o.dotBorder}};background:{{o.dotBg}};color:{{o.dotColor}};font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">{{o.letter}}</span>
+                    {{o.text}}
+                  </button>
+                </sc-for>
+              </div>
+              <sc-if value="{{modalQ.notSubmitted}}" hint-placeholder-val="{{true}}">
+                <button onClick="{{submitModalAnswer}}" disabled="{{modalQ.noSelection}}" style="margin-top:16px;background:{{T.primary}};color:{{T.primaryText}};border:none;border-radius:10px;padding:10px 18px;font-size:13.5px;font-weight:700;cursor:pointer;opacity:{{modalQ.submitOpacity}}">Submit Answer</button>
+              </sc-if>
+              <sc-if value="{{modalQ.submitted}}" hint-placeholder-val="{{false}}">
+                <div style="margin-top:16px;padding-top:16px;border-top:1px solid {{T.border}}">
+                  <div style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px;color:{{modalQ.resultColor}}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><circle cx="12" cy="12" r="10"/><path d="{{modalQ.resultIconPath}}"/></svg>
+                    {{modalQ.resultLabel}}
+                  </div>
+                  <div style="font-size:13.5px;color:{{T.textSecondary}};line-height:1.6;margin-top:8px">{{modalQ.explanation}}</div>
+                  <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+                    <span style="font-size:11.5px;color:{{T.textTertiary}};font-weight:600">Sources:</span>
+                    <sc-for list="{{modalQ.sources}}" as="ms2" hint-placeholder-count="2">
+                      <span style="font-size:11.5px;background:{{T.chipBg}};color:{{T.textSecondary}};padding:3px 8px;border-radius:7px;font-weight:600">{{ms2.icon}} {{ms2.title}}</span>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isResourcesView}}" hint-placeholder-val="{{false}}">
+    <div style="flex:1;min-height:0;overflow-y:auto;padding:26px 30px;display:flex;flex-direction:column;gap:18px;background:{{T.bg}};box-sizing:border-box">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div style="font-size:20px;font-weight:800">My Resources</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div style="position:relative">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="{{T.textTertiary}}" stroke-width="2" style="position:absolute;left:10px;top:50%;transform:translateY(-50%)"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>
+            <input value="{{resourceQuery}}" onChange="{{setResourceQuery}}" placeholder="Search resources" style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:9px;padding:8px 12px 8px 30px;font-size:13px;color:{{T.textPrimary}}"/>
+          </div>
+          <button style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:9px;padding:8px 14px;font-size:13px;font-weight:600;color:{{T.textSecondary}};cursor:pointer" style-hover="background:{{T.surfaceSecondary}}">Filter</button>
+          <button style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:9px;padding:8px 14px;font-size:13px;font-weight:600;color:{{T.textSecondary}};cursor:pointer" style-hover="background:{{T.surfaceSecondary}}">Sort</button>
+          <button onClick="{{openUpload}}" style="background:{{T.primary}};border:none;border-radius:9px;padding:8px 16px;font-size:13px;font-weight:700;color:{{T.primaryText}};cursor:pointer">+ Upload</button>
+        </div>
+      </div>
+      <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;overflow:hidden;box-shadow:{{T.shadowSm}}">
+        <div style="display:grid;grid-template-columns:2.2fr .9fr 1fr .9fr .8fr .8fr .6fr;padding:11px 16px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:{{T.textTertiary}};background:{{T.surfaceSecondary}}">
+          <span>Name</span><span>Type</span><span>Subject</span><span>Uploaded</span><span>Usage</span><span>Status</span><span></span>
+        </div>
+        <sc-for list="{{filteredResources}}" as="r" hint-placeholder-count="6">
+          <div style="display:grid;grid-template-columns:2.2fr .9fr 1fr .9fr .8fr .8fr .6fr;padding:12px 16px;font-size:13px;border-top:1px solid {{T.border}};align-items:center;gap:6px">
+            <span style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{r.name}}</span>
+            <span style="color:{{T.textSecondary}}">{{r.type}}</span>
+            <span style="color:{{T.textSecondary}}">{{r.subject}}</span>
+            <span style="color:{{T.textTertiary}};font-size:12px">{{r.uploaded}}</span>
+            <span style="color:{{T.textTertiary}};font-size:12px">{{r.usage}}</span>
+            <span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;background:{{r.statusBg}};color:{{r.statusColor}};width:fit-content">{{r.status}}</span>
+            <div style="display:flex;gap:6px;justify-content:flex-end">
+              <button onClick="{{r.remove}}" style="background:none;border:none;color:{{T.textTertiary}};cursor:pointer" style-hover="color:{{T.danger}}" title="Delete">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+              </button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isProfileView}}" hint-placeholder-val="{{false}}">
+    <div style="flex:1;min-height:0;overflow-y:auto;padding:26px 30px;background:{{T.bg}};box-sizing:border-box"><div style="display:flex;flex-direction:column;gap:20px;max-width:1180px;margin:0 auto">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:20px;font-weight:800">Profile</div>
+        <button onClick="{{toggleProfileEdit}}" style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:9px;padding:8px 14px;font-size:13px;font-weight:600;color:{{T.textSecondary}};cursor:pointer">{{profileEditLabel}}</button>
+      </div>
+      <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:16px;padding:22px;display:flex;gap:18px;box-shadow:{{T.shadowSm}}">
+        <div style="width:64px;height:64px;border-radius:50%;background:{{T.accentSoft}};color:{{T.accent}};display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;flex-shrink:0">AR</div>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;flex:1">
+          <div><div style="font-size:11px;color:{{T.textTertiary}};font-weight:600">Name</div><div style="font-size:14px;font-weight:600;margin-top:2px">Ayesha Rahman</div></div>
+          <div><div style="font-size:11px;color:{{T.textTertiary}};font-weight:600">University</div><div style="font-size:14px;font-weight:600;margin-top:2px">Dhaka Medical College</div></div>
+          <div><div style="font-size:11px;color:{{T.textTertiary}};font-weight:600">Year</div><div style="font-size:14px;font-weight:600;margin-top:2px">3rd Year</div></div>
+          <div><div style="font-size:11px;color:{{T.textTertiary}};font-weight:600">Study level</div><div style="font-size:14px;font-weight:600;margin-top:2px">Pre-clinical</div></div>
+          <div><div style="font-size:11px;color:{{T.textTertiary}};font-weight:600">Subjects</div><div style="display:flex;gap:6px;margin-top:4px;flex-wrap:wrap"><span style="font-size:11.5px;background:{{T.chipBg}};padding:3px 8px;border-radius:6px;font-weight:600">Pathology</span><span style="font-size:11.5px;background:{{T.chipBg}};padding:3px 8px;border-radius:6px;font-weight:600">Pharmacology</span><span style="font-size:11.5px;background:{{T.chipBg}};padding:3px 8px;border-radius:6px;font-weight:600">Physiology</span></div></div>
+          <div><div style="font-size:11px;color:{{T.textTertiary}};font-weight:600">Preferred learning style</div><div style="font-size:14px;font-weight:600;margin-top:2px">Visual + case-based</div></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px">
+        <sc-for list="{{profileStats}}" as="ps" hint-placeholder-count="5">
+          <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:12px;padding:14px">
+            <div style="font-size:11px;color:{{T.textTertiary}};font-weight:600">{{ps.label}}</div>
+            <div style="font-size:19px;font-weight:800;margin-top:4px">{{ps.value}}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="font-size:16px;font-weight:800;margin-top:8px">Practice Performance & Insights</div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px">
+        <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:18px;box-shadow:{{T.shadowSm}}">
+          <div style="font-size:12px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase;margin-bottom:12px">Accuracy by question type</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{perfByType}}" as="pt" hint-placeholder-count="5">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;margin-bottom:4px"><span>{{pt.label}}</span><span style="color:{{T.textTertiary}}">{{pt.value}}%</span></div>
+                <div style="height:6px;border-radius:4px;background:{{T.surfaceSecondary}};overflow:hidden"><div style="height:100%;background:{{T.accent}};width:{{pt.width}}"></div></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:18px;box-shadow:{{T.shadowSm}}">
+          <div style="font-size:12px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase;margin-bottom:12px">Exam-frequent vs AI-generated accuracy</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{perfBySource}}" as="pb" hint-placeholder-count="2">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;margin-bottom:4px"><span>{{pb.label}}</span><span style="color:{{T.textTertiary}}">{{pb.value}}%</span></div>
+                <div style="height:6px;border-radius:4px;background:{{T.surfaceSecondary}};overflow:hidden"><div style="height:100%;background:{{T.primary}};width:{{pb.width}}"></div></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size:12px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase;margin:16px 0 10px">Weakest topics</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{weakTopics}}" as="wt" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:9px">
+                <span style="width:20px;height:20px;border-radius:50%;background:{{T.chipBg}};color:{{T.textSecondary}};font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">{{wt.rank}}</span>
+                <span style="font-size:13px;font-weight:600;flex:1">{{wt.topic}}</span>
+                <span style="font-size:12px;font-weight:700;color:{{T.danger}}">{{wt.accuracy}}%</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:18px;box-shadow:{{T.shadowSm}}">
+        <div style="font-size:12px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase;margin-bottom:12px">Accuracy trend (6 weeks)</div>
+        <svg viewBox="0 0 400 100" width="100%" height="100" style="overflow:visible">
+          <path d="{{trendPath}}" fill="none" stroke="{{T.accent}}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <sc-for list="{{trendPoints}}" as="tp" hint-placeholder-count="6">
+            <circle cx="{{tp.x}}" cy="{{tp.y}}" r="3.5" fill="{{T.accent}}"/>
+          </sc-for>
+        </svg>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:{{T.textTertiary}};font-weight:600;margin-top:2px">
+          <sc-for list="{{trendLabels}}" as="tl" hint-placeholder-count="6"><span>{{tl}}</span></sc-for>
+        </div>
+      </div>
+
+      <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:18px;box-shadow:{{T.shadowSm}}">
+        <div style="font-size:12px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase;margin-bottom:12px">Study advice</div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <sc-for list="{{studyAdvice}}" as="adv" hint-placeholder-count="4">
+            <div style="display:flex;gap:8px;font-size:13px;color:{{T.textSecondary}};line-height:1.55"><span style="color:{{T.accent}};flex-shrink:0">›</span>{{adv}}</div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isSettingsView}}" hint-placeholder-val="{{false}}">
+    <div style="flex:1;min-height:0;overflow-y:auto;padding:26px 30px;display:flex;gap:26px;background:{{T.bg}};box-sizing:border-box">
+      <div style="width:200px;flex-shrink:0;display:flex;flex-direction:column;gap:2px">
+        <div style="font-size:20px;font-weight:800;margin-bottom:14px">Settings</div>
+        <sc-for list="{{settingsSections}}" as="s" hint-placeholder-count="7">
+          <button onClick="{{s.select}}" style="text-align:left;background:{{s.bg}};color:{{s.color}};border:none;border-radius:9px;padding:9px 11px;font-size:13.5px;font-weight:600;cursor:pointer" style-hover="background:{{T.surfaceSecondary}}">{{s.label}}</button>
+        </sc-for>
+      </div>
+      <div style="flex:1;min-width:0;max-width:560px;background:{{T.surface}};border:1px solid {{T.border}};border-radius:16px;padding:22px;box-shadow:{{T.shadowSm}};height:fit-content">
+        <div style="font-size:16px;font-weight:700;margin-bottom:16px">{{settingsSection}}</div>
+
+        <sc-if value="{{isAccountSection}}" hint-placeholder-val="{{true}}">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:600;color:{{T.textSecondary}}">Full name<input defaultValue="Ayesha Rahman" style="background:{{T.inputBg}};border:1px solid {{T.border}};border-radius:9px;padding:9px 11px;font-size:13.5px;color:{{T.textPrimary}}"/></label>
+            <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:600;color:{{T.textSecondary}}">Email<input defaultValue="ayesha.rahman@dmc.edu" style="background:{{T.inputBg}};border:1px solid {{T.border}};border-radius:9px;padding:9px 11px;font-size:13.5px;color:{{T.textPrimary}}"/></label>
+            <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:600;color:{{T.textSecondary}}">Practicing area (location)
+              <select value="{{practiceLocation}}" onChange="{{setPracticeLocation}}" style="background:{{T.inputBg}};border:1px solid {{T.border}};border-radius:9px;padding:9px 11px;font-size:13.5px;color:{{T.textPrimary}}">
+                <sc-for list="{{locationOptions}}" as="lo" hint-placeholder-count="5">
+                  <option value="{{lo}}">{{lo}}</option>
+                </sc-for>
+              </select>
+            </label>
+            <div style="font-size:11.5px;color:{{T.textTertiary}};margin-top:-6px">Used to suggest a default clinical-guidelines region in Customize.</div>
+            <button style="align-self:flex-start;margin-top:4px;background:{{T.primary}};color:{{T.primaryText}};border:none;border-radius:9px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer">Change password</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{isAppearanceSection}}" hint-placeholder-val="{{false}}">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{themeOptions}}" as="t" hint-placeholder-count="3">
+              <label style="display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;cursor:pointer">
+                <input type="radio" checked="{{t.checked}}" onChange="{{t.select}}"/>{{t.label}}
+              </label>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{isPrivacySection}}" hint-placeholder-val="{{false}}">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <sc-for list="{{privacyToggles}}" as="pt" hint-placeholder-count="2">
+              <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px;font-weight:600;cursor:pointer">{{pt.label}}<input type="checkbox" checked="{{pt.checked}}" onChange="{{pt.toggle}}"/></label>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{isAiPrefSection}}" hint-placeholder-val="{{false}}">
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div>
+              <div style="font-size:12px;font-weight:700;color:{{T.textTertiary}};margin-bottom:8px">Response style</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{responseStyleOptions}}" as="rs" hint-placeholder-count="3">
+                  <label style="display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;cursor:pointer"><input type="radio" checked="{{rs.checked}}" onChange="{{rs.select}}"/>{{rs.label}}</label>
+                </sc-for>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:{{T.textTertiary}};margin-bottom:8px">Show in responses</div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <sc-for list="{{prefToggles}}" as="pf" hint-placeholder-count="3">
+                  <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px;font-weight:600;cursor:pointer">{{pf.label}}<input type="checkbox" checked="{{pf.checked}}" onChange="{{pf.toggle}}"/></label>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{isResourceMgmtSection}}" hint-placeholder-val="{{false}}">
+          <div style="font-size:13.5px;color:{{T.textSecondary}};line-height:1.6">Default categories, sync sources, and auto-tagging preferences for uploaded material live here.</div>
+        </sc-if>
+        <sc-if value="{{isNotificationsSection}}" hint-placeholder-val="{{false}}">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px;font-weight:600;cursor:pointer">Weekly insights email<input type="checkbox" defaultChecked="{{true}}"/></label>
+            <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px;font-weight:600;cursor:pointer">Practice reminders<input type="checkbox" defaultChecked="{{false}}"/></label>
+          </div>
+        </sc-if>
+        <sc-if value="{{isDataExportSection}}" hint-placeholder-val="{{false}}">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <button style="text-align:left;background:{{T.surfaceSecondary}};border:1px solid {{T.border}};border-radius:9px;padding:10px 13px;font-size:13px;font-weight:600;color:{{T.textPrimary}};cursor:pointer">Export learning history</button>
+            <button style="text-align:left;background:{{T.surfaceSecondary}};border:1px solid {{T.border}};border-radius:9px;padding:10px 13px;font-size:13px;font-weight:600;color:{{T.textPrimary}};cursor:pointer">Export AI usage report</button>
+            <button style="text-align:left;background:{{T.surfaceSecondary}};border:1px solid {{T.border}};border-radius:9px;padding:10px 13px;font-size:13px;font-weight:600;color:{{T.danger}};cursor:pointer">Delete chat history</button>
+            <button style="text-align:left;background:{{T.surfaceSecondary}};border:1px solid {{T.border}};border-radius:9px;padding:10px 13px;font-size:13px;font-weight:600;color:{{T.danger}};cursor:pointer">Delete all resources</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isInsightsView}}" hint-placeholder-val="{{false}}">
+    <div style="flex:1;min-height:0;overflow-y:auto;padding:26px 30px;display:flex;flex-direction:column;gap:18px;max-width:520px">
+      <div style="font-size:20px;font-weight:800">Insights</div>
+      <div id="tc-insights-slot"></div>
+    </div>
+  </sc-if>
+
+  <!-- mobile/tablet bottom nav -->
+  <sc-if value="{{showBottomNav}}" hint-placeholder-val="{{false}}">
+    <div style="display:flex;border-top:1px solid {{T.border}};background:{{T.surface}};flex-shrink:0">
+      <sc-for list="{{mobileNavItems}}" as="mi" hint-placeholder-count="4">
+        <button onClick="{{mi.select}}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px;background:none;border:none;color:{{mi.color}};cursor:pointer;font-size:11px;font-weight:600">
+          <span style="font-size:16px">{{mi.icon}}</span>{{mi.label}}
+        </button>
+      </sc-for>
+    </div>
+  </sc-if>
+</div>
+
+<!-- RIGHT SIDEBAR -->
+<sc-if value="{{showRightSidebar}}" hint-placeholder-val="{{true}}">
+<div style="width:320px;flex-shrink:0;height:100%;background:{{T.bg}};border-left:1px solid {{T.border}};padding:16px;box-sizing:border-box;overflow-y:auto;display:flex;flex-direction:column;gap:14px">
+
+  <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:16px;box-shadow:{{T.shadowSm}}">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:7px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{T.accent}}" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        <div style="font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:{{T.textSecondary}}">Resource Selection</div>
+      </div>
+      <button onClick="{{openUpload}}" style="background:{{T.accentSoft}};border:none;color:{{T.accent}};font-size:11.5px;font-weight:700;cursor:pointer;padding:4px 9px;border-radius:7px" style-hover="background:{{T.accent}};color:{{T.primaryText}}">+ Add</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <sc-for list="{{resourceToggleList}}" as="rt" hint-placeholder-count="5">
+        <label style="display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500;cursor:pointer;padding:6px 6px;border-radius:8px" style-hover="background:{{T.surfaceSecondary}}">
+          <input type="checkbox" checked="{{rt.checked}}" onChange="{{rt.toggle}}" style="width:15px;height:15px;accent-color:{{T.accent}};flex-shrink:0"/>{{rt.label}}
+        </label>
+      </sc-for>
+    </div>
+    <div style="margin-top:10px;padding-top:12px;border-top:1px solid {{T.border}};display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10.5px;color:{{T.textTertiary}};font-weight:700;letter-spacing:.03em;text-transform:uppercase">In this chat</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <sc-for list="{{selectedResourceChips}}" as="sc" hint-placeholder-count="3">
+          <span style="font-size:11.5px;color:{{T.textSecondary}};font-weight:600;background:{{T.chipBg}};padding:4px 9px;border-radius:7px">{{sc}}</span>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:16px;box-shadow:{{T.shadowSm}}">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:{{T.textSecondary}}">Your AI Usage Performance</div>
+      <button onClick="{{toggleDependencyInfo}}" style="background:none;border:none;color:{{T.textTertiary}};cursor:pointer;display:flex;padding:0">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11"/><circle cx="12" cy="7.5" r=".6" fill="currentColor"/></svg>
+      </button>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <div style="width:72px;height:72px;border-radius:50%;background:{{dependencyGradient}};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <div style="width:54px;height:54px;border-radius:50%;background:{{T.surface}};display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:{{T.textPrimary}}">69%</div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:700">AI dependency</div>
+        <div style="font-size:11px;color:{{T.textTertiary}};margin-top:2px;line-height:1.4">Usage trend, past 7 days</div>
+      </div>
+    </div>
+    <sc-if value="{{dependencyInfoOpen}}" hint-placeholder-val="{{false}}">
+      <div style="font-size:11.5px;color:{{T.textSecondary}};line-height:1.5;margin-top:10px;background:{{T.surfaceSecondary}};border-radius:9px;padding:9px 11px">This metric represents how frequently your study sessions rely on AI assistance. It is intended to help you maintain a balanced learning process.</div>
+    </sc-if>
+
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid {{T.border}}">
+      <div style="font-size:10.5px;color:{{T.textTertiary}};font-weight:700;letter-spacing:.03em;text-transform:uppercase;margin-bottom:8px">Dependency record</div>
+      <svg viewBox="0 0 260 76" width="100%" height="76" style="overflow:visible">
+        <path d="{{chartPath}}" fill="none" stroke="{{T.accent}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <sc-for list="{{chartPoints}}" as="pt" hint-placeholder-count="7">
+          <circle cx="{{pt.x}}" cy="{{pt.y}}" r="{{pt.r}}" fill="{{T.accent}}" onMouseEnter="{{pt.hoverOn}}" onMouseLeave="{{pt.hoverOff}}" style="cursor:pointer"/>
+        </sc-for>
+      </svg>
+      <sc-if value="{{hasHoveredPoint}}" hint-placeholder-val="{{false}}">
+        <div style="font-size:11.5px;font-weight:700;color:{{T.textSecondary}};margin-top:2px">{{hoveredLabel}}</div>
+      </sc-if>
+    </div>
+  </div>
+
+  <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:16px;box-shadow:{{T.shadowSm}}">
+    <div style="font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:{{T.textSecondary}};margin-bottom:12px">Learning Balance</div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <sc-for list="{{learningBalanceBars}}" as="lb" hint-placeholder-count="3">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:5px"><span>{{lb.label}}</span><span style="color:{{T.textTertiary}}">{{lb.value}}%</span></div>
+          <div style="height:6px;border-radius:4px;background:{{T.surfaceSecondary}};overflow:hidden"><div style="height:100%;background:{{lb.color}};width:{{lb.width}}"></div></div>
+        </div>
+      </sc-for>
+      <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px;font-weight:600;padding-top:6px;margin-top:2px;border-top:1px solid {{T.border}}"><span style="color:{{T.textSecondary}}">Practice questions completed</span><span style="color:{{T.accent}};font-weight:800;font-size:15px">124</span></div>
+    </div>
+  </div>
+
+  <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:16px;box-shadow:{{T.shadowSm}}">
+    <div style="font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:{{T.textSecondary}};margin-bottom:12px">Your Learning Insights</div>
+    <div style="display:flex;flex-direction:column;gap:11px">
+      <sc-for list="{{insights}}" as="ins" hint-placeholder-count="5">
+        <div style="display:flex;gap:9px;font-size:12.5px;color:{{T.textSecondary}};line-height:1.5">
+          <span style="color:{{T.accent}};flex-shrink:0;font-weight:700">›</span>{{ins}}
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- CUSTOMIZE MODAL -->
+<sc-if value="{{showCustomize}}" hint-placeholder-val="{{false}}">
+  <div onClick="{{closeCustomize}}" style="position:fixed;inset:0;background:rgba(9,20,18,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px">
+    <div onClick="{{stop}}" style="background:{{T.surface}};border-radius:18px;width:100%;max-width:460px;max-height:86vh;overflow-y:auto;padding:24px;box-shadow:{{T.shadowMd}};animation:tc-pop .15s ease-out">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-size:16px;font-weight:800">Customize</div>
+        <button onClick="{{closeCustomize}}" style="background:none;border:none;color:{{T.textTertiary}};cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div><div style="font-size:11.5px;font-weight:700;color:{{T.textTertiary}};margin-bottom:7px;text-transform:uppercase">Theme</div><div style="display:flex;gap:8px">
+          <sc-for list="{{customizeThemeOpts}}" as="ct" hint-placeholder-count="3"><button onClick="{{ct.select}}" style="flex:1;padding:8px;border-radius:9px;border:1.5px solid {{ct.border}};background:{{ct.bg}};color:{{ct.color}};font-size:12.5px;font-weight:600;cursor:pointer">{{ct.label}}</button></sc-for>
+        </div></div>
+        <div><div style="font-size:11.5px;font-weight:700;color:{{T.textTertiary}};margin-bottom:7px;text-transform:uppercase">AI response style</div><div style="display:flex;gap:8px">
+          <sc-for list="{{customizeStyleOpts}}" as="cs" hint-placeholder-count="3"><button onClick="{{cs.select}}" style="flex:1;padding:8px;border-radius:9px;border:1.5px solid {{cs.border}};background:{{cs.bg}};color:{{cs.color}};font-size:12.5px;font-weight:600;cursor:pointer">{{cs.label}}</button></sc-for>
+        </div></div>
+        <div><div style="font-size:11.5px;font-weight:700;color:{{T.textTertiary}};margin-bottom:7px;text-transform:uppercase">Study level</div><div style="display:flex;gap:8px">
+          <sc-for list="{{customizeLevelOpts}}" as="cl" hint-placeholder-count="3"><button onClick="{{cl.select}}" style="flex:1;padding:8px;border-radius:9px;border:1.5px solid {{cl.border}};background:{{cl.bg}};color:{{cl.color}};font-size:12px;font-weight:600;cursor:pointer">{{cl.label}}</button></sc-for>
+        </div></div>
+        <div><div style="font-size:11.5px;font-weight:700;color:{{T.textTertiary}};margin-bottom:7px;text-transform:uppercase">Language</div><div style="display:flex;gap:8px">
+          <sc-for list="{{customizeLangOpts}}" as="cg" hint-placeholder-count="3"><button onClick="{{cg.select}}" style="flex:1;padding:8px;border-radius:9px;border:1.5px solid {{cg.border}};background:{{cg.bg}};color:{{cg.color}};font-size:12px;font-weight:600;cursor:pointer">{{cg.label}}</button></sc-for>
+        </div></div>
+        <div><div style="font-size:11.5px;font-weight:700;color:{{T.textTertiary}};margin-bottom:7px;text-transform:uppercase">Medical terminology</div><div style="display:flex;gap:8px">
+          <sc-for list="{{customizeTermOpts}}" as="cm" hint-placeholder-count="2"><button onClick="{{cm.select}}" style="flex:1;padding:8px;border-radius:9px;border:1.5px solid {{cm.border}};background:{{cm.bg}};color:{{cm.color}};font-size:12.5px;font-weight:600;cursor:pointer">{{cm.label}}</button></sc-for>
+        </div></div>
+        <div>
+          <div style="font-size:11.5px;font-weight:700;color:{{T.textTertiary}};margin-bottom:7px;text-transform:uppercase">Clinical guidelines region</div>
+          <select value="{{guidelineLocation}}" onChange="{{setGuidelineLocation}}" style="width:100%;box-sizing:border-box;background:{{T.inputBg}};border:1px solid {{T.border}};border-radius:9px;padding:9px 11px;font-size:13px;font-weight:600;color:{{T.textPrimary}}">
+            <sc-for list="{{locationOptions}}" as="lo" hint-placeholder-count="5">
+              <option value="{{lo}}">{{lo}}</option>
+            </sc-for>
+          </select>
+          <div style="font-size:11.5px;color:{{T.textTertiary}};margin-top:7px">Suggested from your practicing area in Settings — change anytime.</div>
+        </div>
+        <div>
+          <div style="font-size:11.5px;font-weight:700;color:{{T.textTertiary}};margin-bottom:7px;text-transform:uppercase">Response preferences</div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <sc-for list="{{customizePrefOpts}}" as="cp" hint-placeholder-count="4"><label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:500;cursor:pointer">{{cp.label}}<input type="checkbox" checked="{{cp.checked}}" onChange="{{cp.toggle}}"/></label></sc-for>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <button onClick="{{closeCustomize}}" style="flex:1;padding:10px;border-radius:10px;border:1px solid {{T.border}};background:none;color:{{T.textSecondary}};font-weight:600;font-size:13px;cursor:pointer">Cancel</button>
+          <button onClick="{{saveCustomize}}" style="flex:1;padding:10px;border-radius:10px;border:none;background:{{T.primary}};color:{{T.primaryText}};font-weight:700;font-size:13px;cursor:pointer">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<!-- UPLOAD MODAL -->
+<sc-if value="{{showUpload}}" hint-placeholder-val="{{false}}">
+  <div onClick="{{closeUpload}}" style="position:fixed;inset:0;background:rgba(9,20,18,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px">
+    <div onClick="{{stop}}" style="background:{{T.surface}};border-radius:18px;width:100%;max-width:460px;padding:24px;box-shadow:{{T.shadowMd}};animation:tc-pop .15s ease-out">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="font-size:16px;font-weight:800">Add Resources</div>
+        <button onClick="{{closeUpload}}" style="background:none;border:none;color:{{T.textTertiary}};cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div style="font-size:12.5px;color:{{T.textTertiary}};margin-bottom:16px">Drop files or pick a source type below.</div>
+      <div style="border:1.5px dashed {{T.border}};border-radius:12px;padding:22px;text-align:center;color:{{T.textTertiary}};font-size:12.5px;margin-bottom:16px">Drag & drop PDF, notes or images here</div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px">
+        <sc-for list="{{uploadOptions}}" as="up" hint-placeholder-count="6">
+          <button style="display:flex;align-items:center;gap:8px;background:{{T.surfaceSecondary}};border:1px solid {{T.border}};border-radius:10px;padding:10px 11px;cursor:pointer;font-size:12.5px;font-weight:600;color:{{T.textPrimary}};text-align:left" style-hover="border-color:{{T.borderStrong}}">
+            <span style="font-size:15px">{{up.icon}}</span>{{up.label}}
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<!-- SOURCE PREVIEW -->
+<sc-if value="{{hasSourcePreview}}" hint-placeholder-val="{{false}}">
+  <div onClick="{{closeSourcePreview}}" style="position:fixed;inset:0;background:rgba(9,20,18,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px">
+    <div onClick="{{stop}}" style="background:{{T.surface}};border-radius:18px;width:100%;max-width:440px;padding:24px;box-shadow:{{T.shadowMd}};animation:tc-pop .15s ease-out">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:10px">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:22px">{{sourcePreview.icon}}</span>
+          <div>
+            <div style="font-size:15px;font-weight:800">{{sourcePreview.title}}</div>
+            <div style="font-size:12px;color:{{T.textTertiary}};font-weight:600;margin-top:2px">{{sourcePreview.type}} · {{sourcePreview.section}}</div>
+          </div>
+        </div>
+        <button onClick="{{closeSourcePreview}}" style="background:none;border:none;color:{{T.textTertiary}};cursor:pointer;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <blockquote style="margin:0;padding:12px 14px;background:{{T.surfaceSecondary}};border-left:3px solid {{T.accent}};border-radius:0 10px 10px 0;font-size:13px;line-height:1.6;color:{{T.textSecondary}};font-style:italic">{{sourcePreview.excerpt}}</blockquote>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:10px">
+        <div style="display:inline-flex;align-items:center;gap:6px;background:{{T.accentSoft}};color:{{T.accent}};font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:7px">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Used in this answer
+        </div>
+        <div style="font-size:11.5px;color:{{T.textTertiary}};font-weight:600">AI pulled this from {{sourcePreview.pageLabel}}</div>
+      </div>
+      <button onClick="{{openViewer}}" style="margin-top:14px;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:{{T.primary}};color:{{T.primaryText}};border:none;border-radius:10px;padding:11px 14px;font-size:13.5px;font-weight:700;cursor:pointer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        Go to {{sourcePreview.pageLabel}}
+      </button>
+    </div>
+  </div>
+</sc-if>
+
+<!-- RESOURCE VIEWER -->
+<sc-if value="{{hasViewer}}" hint-placeholder-val="{{false}}">
+  <div onClick="{{closeViewer}}" style="position:fixed;inset:0;background:rgba(9,20,18,.55);display:flex;align-items:center;justify-content:center;z-index:60;padding:20px">
+    <div onClick="{{stop}}" style="background:{{T.surface}};border-radius:18px;width:100%;max-width:520px;padding:22px;box-shadow:{{T.shadowMd}};animation:tc-pop .15s ease-out">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div>
+          <div style="font-size:15px;font-weight:800">{{viewerSource.title}}</div>
+          <div style="font-size:12px;color:{{T.textTertiary}};font-weight:600;margin-top:2px">Viewing {{viewerSource.pageLabel}}</div>
+        </div>
+        <button onClick="{{closeViewer}}" style="background:none;border:none;color:{{T.textTertiary}};cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+
+      <sc-if value="{{isPageViewer}}" hint-placeholder-val="{{true}}">
+        <div style="background:{{T.surfaceSecondary}};border:1px solid {{T.border}};border-radius:12px;padding:26px;min-height:280px;display:flex;flex-direction:column;gap:10px">
+          <div style="align-self:flex-end;font-size:11px;font-weight:700;color:{{T.textTertiary}}">{{viewerSource.pageLabel}}</div>
+          <div style="height:11px;border-radius:3px;background:{{T.border}};width:88%"></div>
+          <div style="height:11px;border-radius:3px;background:{{T.border}};width:95%"></div>
+          <div style="height:11px;border-radius:3px;background:{{T.border}};width:70%"></div>
+          <div style="height:11px;border-radius:3px;background:{{T.border}};width:92%;margin-top:10px"></div>
+          <div style="height:11px;border-radius:3px;background:{{T.border}};width:60%"></div>
+          <div style="margin-top:auto;font-size:11.5px;color:{{T.textTertiary}};font-style:italic;text-align:center">Simulated page render — connect the real document viewer in production.</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:12px">
+          <button style="background:none;border:1px solid {{T.border}};border-radius:8px;padding:7px 12px;font-size:12.5px;font-weight:600;color:{{T.textSecondary}};cursor:pointer">← Previous page</button>
+          <button style="background:none;border:1px solid {{T.border}};border-radius:8px;padding:7px 12px;font-size:12.5px;font-weight:600;color:{{T.textSecondary}};cursor:pointer">Next page →</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isVideoViewer}}" hint-placeholder-val="{{false}}">
+        <div style="background:#0B1210;border-radius:12px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative">
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><polygon points="6 4 20 12 6 20"/></svg>
+          </div>
+          <div style="position:absolute;bottom:12px;left:12px;right:12px">
+            <div style="height:4px;border-radius:2px;background:rgba(255,255,255,.25);overflow:hidden">
+              <div style="height:100%;background:{{T.accent}};width:{{viewerScrubberPct}}"></div>
+            </div>
+            <div style="font-size:11px;color:#fff;font-weight:600;margin-top:6px">{{viewerTimeLabel}}</div>
+          </div>
+        </div>
+        <div style="font-size:11.5px;color:{{T.textTertiary}};font-style:italic;text-align:center;margin-top:10px">Simulated player, seeked to {{viewerSource.pageLabel}} — connect the real video source in production.</div>
+      </sc-if>
+    </div>
+  </div>
+</sc-if>
+</sc-if>
+
+<!-- ============ TEACHER DASHBOARD ============ -->
+<sc-if value="{{isTeacherRole}}" hint-placeholder-val="{{false}}">
+<div style="width:240px;flex-shrink:0;display:flex;flex-direction:column;height:100%;background:{{T.surface}};border-right:1px solid {{T.border}};padding:18px 14px;box-sizing:border-box;gap:16px;overflow-y:auto">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 4px">
+    <div style="display:flex;align-items:center;gap:9px">
+      <div style="width:32px;height:32px;border-radius:10px;background:{{T.primary}};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{T.primaryText}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg>
+      </div>
+      <div style="font-weight:800;font-size:16px;letter-spacing:-.2px">TrustCal AI</div>
+    </div>
+    <button onClick="{{switchToStudent}}" title="Switch to Student view" style="width:30px;height:30px;border-radius:8px;border:1px solid {{T.border}};background:transparent;color:{{T.textSecondary}};display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:{{T.surfaceSecondary}}">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg>
+    </button>
+  </div>
+  <div style="font-size:11px;font-weight:700;letter-spacing:.05em;color:{{T.textTertiary}};text-transform:uppercase;padding:0 4px">Teacher Dashboard</div>
+  <div style="display:flex;flex-direction:column;gap:2px">
+    <sc-for list="{{teacherNavItems}}" as="tn" hint-placeholder-count="7">
+      <button onClick="{{tn.select}}" style="text-align:left;background:{{tn.bg}};color:{{tn.color}};border:none;border-radius:9px;padding:10px 11px;font-size:13.5px;font-weight:600;cursor:pointer" style-hover="background:{{T.surfaceSecondary}}">{{tn.label}}</button>
+    </sc-for>
+  </div>
+  <div style="margin-top:auto;padding-top:12px;border-top:1px solid {{T.border}};font-size:11.5px;color:{{T.textTertiary}};line-height:1.5">Signed in as faculty · viewing class performance data for educational oversight.</div>
+</div>
+
+<div style="flex:1;min-width:0;min-height:0;overflow-y:auto;padding:26px 30px;background:{{T.bg}}">
+  <sc-if value="{{isOverviewView}}" hint-placeholder-val="{{true}}">
+    <div style="display:flex;flex-direction:column;gap:18px;max-width:1180px">
+      <div style="font-size:20px;font-weight:800">Class Overview</div>
+      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">
+        <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:12px;padding:16px;box-shadow:{{T.shadowSm}}"><div style="font-size:11px;color:{{T.textTertiary}};font-weight:600">Total students</div><div style="font-size:22px;font-weight:800;margin-top:5px">{{totalStudents}}</div></div>
+        <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:12px;padding:16px;box-shadow:{{T.shadowSm}}"><div style="font-size:11px;color:{{T.textTertiary}};font-weight:600">Class avg accuracy</div><div style="font-size:22px;font-weight:800;margin-top:5px">{{classAvgAccuracy}}%</div></div>
+        <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:12px;padding:16px;box-shadow:{{T.shadowSm}}"><div style="font-size:11px;color:{{T.textTertiary}};font-weight:600">Class avg AI dependency</div><div style="font-size:22px;font-weight:800;margin-top:5px">{{classAvgDependency}}%</div></div>
+        <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:12px;padding:16px;box-shadow:{{T.shadowSm}}"><div style="font-size:11px;color:{{T.textTertiary}};font-weight:600">At-risk students</div><div style="font-size:22px;font-weight:800;margin-top:5px;color:{{T.danger}}">{{atRiskCount}}</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:14px">
+        <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:18px;box-shadow:{{T.shadowSm}}">
+          <div style="font-size:12px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase;margin-bottom:12px">Weakest topics across class</div>
+          <div style="display:flex;flex-direction:column;gap:11px">
+            <sc-for list="{{classWeakTopics}}" as="ct" hint-placeholder-count="4">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;margin-bottom:4px"><span>{{ct.topic}}</span><span style="color:{{T.textTertiary}}">{{ct.count}} students</span></div>
+                <div style="height:6px;border-radius:4px;background:{{T.surfaceSecondary}};overflow:hidden"><div style="height:100%;background:{{T.warning}};width:{{ct.pct}}%"></div></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:18px;box-shadow:{{T.shadowSm}}">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div style="font-size:12px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase">Recent alerts</div>
+            <button onClick="{{goAlertsView}}" style="background:none;border:none;color:{{T.accent}};font-size:12px;font-weight:700;cursor:pointer">View all</button>
+          </div>
+          <sc-if value="{{hasAlerts}}" hint-placeholder-val="{{true}}">
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <sc-for list="{{recentAlerts}}" as="ra" hint-placeholder-count="4">
+                <div onClick="{{ra.open}}" style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:8px;border-radius:9px" style-hover="background:{{T.surfaceSecondary}}">
+                  <span style="width:28px;height:28px;border-radius:50%;background:{{T.accentSoft}};color:{{T.accent}};font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">{{ra.initials}}</span>
+                  <div style="min-width:0;flex:1"><div style="font-size:13px;font-weight:600">{{ra.name}}</div><div style="font-size:11px;color:{{T.danger}};font-weight:600">{{ra.flagsText}}</div></div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isStudentsView}}" hint-placeholder-val="{{false}}">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div style="font-size:20px;font-weight:800">Students</div>
+        <div style="position:relative">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="{{T.textTertiary}}" stroke-width="2" style="position:absolute;left:10px;top:50%;transform:translateY(-50%)"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>
+          <input value="{{teacherStudentQuery}}" onChange="{{setTeacherStudentQuery}}" placeholder="Search students" style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:9px;padding:8px 12px 8px 30px;font-size:13px;color:{{T.textPrimary}}"/>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px">
+        <sc-for list="{{filteredStudents}}" as="st" hint-placeholder-count="10">
+          <div onClick="{{st.open}}" style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:16px;cursor:pointer;box-shadow:{{T.shadowSm}}" style-hover="border-color:{{T.borderStrong}}">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="width:38px;height:38px;border-radius:50%;background:{{T.accentSoft}};color:{{T.accent}};font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">{{st.initials}}</span>
+              <div style="min-width:0"><div style="font-size:13.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{st.name}}</div><div style="font-size:11px;color:{{T.textTertiary}}">{{st.batch}}</div></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:12px;font-size:11.5px">
+              <div><div style="color:{{T.textTertiary}};font-weight:600">Accuracy</div><div style="font-weight:800;font-size:14px;color:{{st.accColor}}">{{st.accuracy}}%</div></div>
+              <div><div style="color:{{T.textTertiary}};font-weight:600">AI dependency</div><div style="font-weight:800;font-size:14px;color:{{st.depColor}}">{{st.dependency}}%</div></div>
+              <div><div style="color:{{T.textTertiary}};font-weight:600">Active</div><div style="font-weight:700;font-size:12px">{{st.lastActive}}</div></div>
+            </div>
+            <sc-if value="{{st.atRisk}}" hint-placeholder-val="{{false}}">
+              <div style="margin-top:10px;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(180,80,59,0.12);color:{{T.danger}};width:fit-content">⚠ At risk</div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isLeaderboardView}}" hint-placeholder-val="{{false}}">
+    <div style="display:flex;flex-direction:column;gap:14px;max-width:640px">
+      <div style="font-size:20px;font-weight:800">Leaderboard</div>
+      <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;overflow:hidden;box-shadow:{{T.shadowSm}}">
+        <sc-for list="{{leaderboard}}" as="lb" hint-placeholder-count="20">
+          <div onClick="{{lb.open}}" style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-top:1px solid {{T.border}};cursor:pointer" style-hover="background:{{T.surfaceSecondary}}">
+            <span style="width:24px;font-size:13px;font-weight:800;color:{{T.textTertiary}}">{{lb.rank}}</span>
+            <span style="width:30px;height:30px;border-radius:50%;background:{{T.accentSoft}};color:{{T.accent}};font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">{{lb.initials}}</span>
+            <span style="font-size:13.5px;font-weight:600;flex:1">{{lb.name}}</span>
+            <span style="font-size:12px;color:{{T.textTertiary}}">{{lb.practiceCompleted}} qs</span>
+            <span style="font-size:14px;font-weight:800;color:{{T.accent}};width:48px;text-align:right">{{lb.accuracy}}%</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isAssignmentsView}}" hint-placeholder-val="{{false}}">
+    <div style="display:flex;flex-direction:column;gap:16px;max-width:640px">
+      <div style="font-size:20px;font-weight:800">Assignments</div>
+      <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:18px;box-shadow:{{T.shadowSm}};display:flex;flex-direction:column;gap:14px">
+        <div><div style="font-size:11.5px;font-weight:700;color:{{T.textTertiary}};margin-bottom:7px;text-transform:uppercase">Topic</div><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{assignTopicOpts}}" as="at" hint-placeholder-count="6"><button onClick="{{at.select}}" style="padding:7px 11px;border-radius:8px;border:none;background:{{at.bg}};color:{{at.color}};font-size:12px;font-weight:600;cursor:pointer">{{at.label}}</button></sc-for></div></div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap">
+          <div><div style="font-size:11.5px;font-weight:700;color:{{T.textTertiary}};margin-bottom:7px;text-transform:uppercase">Type</div><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{assignTypeOpts}}" as="ty" hint-placeholder-count="5"><button onClick="{{ty.select}}" style="padding:7px 11px;border-radius:8px;border:none;background:{{ty.bg}};color:{{ty.color}};font-size:12px;font-weight:600;cursor:pointer">{{ty.label}}</button></sc-for></div></div>
+          <div><div style="font-size:11.5px;font-weight:700;color:{{T.textTertiary}};margin-bottom:7px;text-transform:uppercase">Difficulty</div><div style="display:flex;gap:6px"><sc-for list="{{assignDiffOpts}}" as="ad" hint-placeholder-count="3"><button onClick="{{ad.select}}" style="padding:7px 11px;border-radius:8px;border:none;background:{{ad.bg}};color:{{ad.color}};font-size:12px;font-weight:600;cursor:pointer">{{ad.label}}</button></sc-for></div></div>
+        </div>
+        <div><div style="font-size:11.5px;font-weight:700;color:{{T.textTertiary}};margin-bottom:7px;text-transform:uppercase">Assign to</div><div style="display:flex;gap:6px"><sc-for list="{{assignTargetOpts}}" as="tg" hint-placeholder-count="2"><button onClick="{{tg.select}}" style="padding:7px 11px;border-radius:8px;border:none;background:{{tg.bg}};color:{{tg.color}};font-size:12px;font-weight:600;cursor:pointer">{{tg.label}}</button></sc-for></div></div>
+        <sc-if value="{{isIndividualTarget}}" hint-placeholder-val="{{false}}">
+          <div><div style="font-size:11.5px;font-weight:700;color:{{T.textTertiary}};margin-bottom:7px;text-transform:uppercase">Student</div><div style="display:flex;flex-direction:column;gap:2px;max-height:140px;overflow-y:auto;border:1px solid {{T.border}};border-radius:9px;padding:4px"><sc-for list="{{studentOptionsForAssign}}" as="so" hint-placeholder-count="6"><button onClick="{{so.select}}" style="text-align:left;padding:7px 9px;border-radius:7px;border:none;background:{{so.bg}};color:{{so.color}};font-size:12.5px;font-weight:600;cursor:pointer">{{so.label}}</button></sc-for></div></div>
+        </sc-if>
+        <label style="display:flex;flex-direction:column;gap:5px;font-size:11.5px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase">Due date<input value="{{assignDueDate}}" onChange="{{setAssignDueDate}}" placeholder="e.g. Oct 5" style="background:{{T.inputBg}};border:1px solid {{T.border}};border-radius:9px;padding:9px 11px;font-size:13px;font-weight:600;color:{{T.textPrimary}};text-transform:none"/></label>
+        <button onClick="{{addAssignment}}" style="align-self:flex-start;background:{{T.primary}};color:{{T.primaryText}};border:none;border-radius:9px;padding:10px 18px;font-size:13.5px;font-weight:700;cursor:pointer">Assign</button>
+      </div>
+      <sc-if value="{{hasAssignments}}" hint-placeholder-val="{{true}}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{assignmentsList}}" as="asg" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:10px;background:{{T.surface}};border:1px solid {{T.border}};border-radius:11px;padding:11px 14px">
+              <div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:700">{{asg.topic}} · {{asg.type}}</div><div style="font-size:11.5px;color:{{T.textTertiary}}">{{asg.target}} · {{asg.difficulty}} · Due {{asg.due}}</div></div>
+              <button onClick="{{asg.remove}}" style="background:none;border:none;color:{{T.textTertiary}};cursor:pointer" style-hover="color:{{T.danger}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isAlertsView}}" hint-placeholder-val="{{false}}">
+    <div style="display:flex;flex-direction:column;gap:14px;max-width:700px">
+      <div style="font-size:20px;font-weight:800">At-Risk Alerts</div>
+      <sc-if value="{{hasAlertsList}}" hint-placeholder-val="{{true}}">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{alertsList}}" as="al" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:12px;background:{{T.surface}};border:1px solid {{T.border}};border-radius:12px;padding:14px 16px;box-shadow:{{T.shadowSm}}">
+              <span style="width:34px;height:34px;border-radius:50%;background:{{T.accentSoft}};color:{{T.accent}};font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">{{al.initials}}</span>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:13.5px;font-weight:700">{{al.name}}</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+                  <sc-for list="{{al.flags}}" as="fl" hint-placeholder-count="2"><span style="font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(180,80,59,0.12);color:{{T.danger}}">{{fl}}</span></sc-for>
+                </div>
+              </div>
+              <button onClick="{{al.open}}" style="background:{{T.surfaceSecondary}};border:1px solid {{T.border}};border-radius:8px;padding:7px 13px;font-size:12px;font-weight:700;color:{{T.textSecondary}};cursor:pointer">View profile</button>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isAnnouncementsView}}" hint-placeholder-val="{{false}}">
+    <div style="display:flex;flex-direction:column;gap:14px;max-width:640px">
+      <div style="font-size:20px;font-weight:800">Announcements</div>
+      <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:16px;box-shadow:{{T.shadowSm}}">
+        <textarea value="{{announcementDraft}}" onChange="{{setAnnouncementDraft}}" placeholder="Write an announcement to the class..." rows="3" style="width:100%;box-sizing:border-box;background:{{T.surfaceSecondary}};border:1px solid {{T.border}};border-radius:10px;padding:11px 13px;font-size:13.5px;font-family:inherit;color:{{T.textPrimary}};resize:none"></textarea>
+        <button onClick="{{sendAnnouncement}}" style="margin-top:10px;background:{{T.primary}};color:{{T.primaryText}};border:none;border-radius:9px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer">Send to class</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{announcements}}" as="an" hint-placeholder-count="3">
+          <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:11px;padding:12px 14px">
+            <div style="font-size:13px;color:{{T.textPrimary}};line-height:1.5">{{an.text}}</div>
+            <div style="font-size:11px;color:{{T.textTertiary}};margin-top:5px;font-weight:600">{{an.date}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isReportsView}}" hint-placeholder-val="{{false}}">
+    <div style="display:flex;flex-direction:column;gap:14px;max-width:500px">
+      <div style="font-size:20px;font-weight:800">Reports & Export</div>
+      <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:14px;padding:18px;box-shadow:{{T.shadowSm}};display:flex;flex-direction:column;gap:10px">
+        <button style="text-align:left;background:{{T.surfaceSecondary}};border:1px solid {{T.border}};border-radius:9px;padding:11px 14px;font-size:13px;font-weight:600;color:{{T.textPrimary}};cursor:pointer">Export class performance report (PDF)</button>
+        <button style="text-align:left;background:{{T.surfaceSecondary}};border:1px solid {{T.border}};border-radius:9px;padding:11px 14px;font-size:13px;font-weight:600;color:{{T.textPrimary}};cursor:pointer">Export individual student reports (ZIP)</button>
+        <button style="text-align:left;background:{{T.surfaceSecondary}};border:1px solid {{T.border}};border-radius:9px;padding:11px 14px;font-size:13px;font-weight:600;color:{{T.textPrimary}};cursor:pointer">Export at-risk student summary (CSV)</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+<!-- STUDENT DETAIL MODAL -->
+<sc-if value="{{hasStudentDetail}}" hint-placeholder-val="{{false}}">
+  <div onClick="{{closeStudentDetail}}" style="position:fixed;inset:0;background:rgba(9,20,18,.5);display:flex;align-items:center;justify-content:center;z-index:55;padding:20px">
+    <div onClick="{{stop}}" style="background:{{T.surface}};border-radius:18px;width:100%;max-width:620px;max-height:88vh;overflow-y:auto;padding:24px;box-shadow:{{T.shadowMd}};animation:tc-pop .15s ease-out">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">
+        <div style="display:flex;gap:12px;align-items:center">
+          <span style="width:48px;height:48px;border-radius:50%;background:{{T.accentSoft}};color:{{T.accent}};font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">{{studentDetail.initials}}</span>
+          <div><div style="font-size:16px;font-weight:800">{{studentDetail.name}}</div><div style="font-size:12px;color:{{T.textTertiary}};font-weight:600">{{studentDetail.batch}}</div></div>
+        </div>
+        <button onClick="{{closeStudentDetail}}" style="background:none;border:none;color:{{T.textTertiary}};cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+
+      <sc-if value="{{studentDetail.hasFlags}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+          <sc-for list="{{studentDetail.flagsChips}}" as="fc" hint-placeholder-count="2"><span style="font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(180,80,59,0.12);color:{{T.danger}}">⚠ {{fc}}</span></sc-for>
+        </div>
+      </sc-if>
+
+      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px">
+        <div style="background:{{T.surfaceSecondary}};border-radius:10px;padding:11px"><div style="font-size:10.5px;color:{{T.textTertiary}};font-weight:600">Accuracy</div><div style="font-size:17px;font-weight:800;color:{{studentDetail.accColor}};margin-top:3px">{{studentDetail.accuracy}}%</div></div>
+        <div style="background:{{T.surfaceSecondary}};border-radius:10px;padding:11px"><div style="font-size:10.5px;color:{{T.textTertiary}};font-weight:600">AI dependency</div><div style="font-size:17px;font-weight:800;margin-top:3px">{{studentDetail.dependency}}%</div></div>
+        <div style="background:{{T.surfaceSecondary}};border-radius:10px;padding:11px"><div style="font-size:10.5px;color:{{T.textTertiary}};font-weight:600">Practice done</div><div style="font-size:17px;font-weight:800;margin-top:3px">{{studentDetail.practiceCompleted}}</div></div>
+        <div style="background:{{T.surfaceSecondary}};border-radius:10px;padding:11px"><div style="font-size:10.5px;color:{{T.textTertiary}};font-weight:600">Last active</div><div style="font-size:14px;font-weight:700;margin-top:5px">{{studentDetail.lastActive}}</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:12px;padding:14px">
+          <div style="font-size:11px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase;margin-bottom:9px">Accuracy by type</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{studentDetail.perfByType}}" as="pt" hint-placeholder-count="4">
+              <div><div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:600;margin-bottom:3px"><span>{{pt.label}}</span><span style="color:{{T.textTertiary}}">{{pt.value}}%</span></div><div style="height:5px;border-radius:3px;background:{{T.surfaceSecondary}};overflow:hidden"><div style="height:100%;background:{{T.accent}};width:{{pt.width}}"></div></div></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:12px;padding:14px">
+          <div style="font-size:11px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase;margin-bottom:9px">Exam vs AI-generated</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{studentDetail.examVsAi}}" as="ev" hint-placeholder-count="2">
+              <div><div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:600;margin-bottom:3px"><span>{{ev.label}}</span><span style="color:{{T.textTertiary}}">{{ev.value}}%</span></div><div style="height:5px;border-radius:3px;background:{{T.surfaceSecondary}};overflow:hidden"><div style="height:100%;background:{{T.primary}};width:{{ev.width}}"></div></div></div>
+            </sc-for>
+          </div>
+          <div style="font-size:11px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase;margin:12px 0 6px">Weak topics</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap">
+            <sc-for list="{{studentDetail.weakTopics}}" as="wt2" hint-placeholder-count="2"><span style="font-size:11px;font-weight:600;background:{{T.chipBg}};color:{{T.textSecondary}};padding:3px 8px;border-radius:7px">{{wt2}}</span></sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:12px;padding:14px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase;margin-bottom:9px">Learning Balance</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{studentDetail.learningBalance}}" as="lbal" hint-placeholder-count="3">
+            <div><div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:600;margin-bottom:3px"><span>{{lbal.label}}</span><span style="color:{{T.textTertiary}}">{{lbal.value}}%</span></div><div style="height:5px;border-radius:3px;background:{{T.surfaceSecondary}};overflow:hidden"><div style="height:100%;background:{{T.primary}};width:{{lbal.width}}"></div></div></div>
+          </sc-for>
+          <div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:600;padding-top:5px;margin-top:2px;border-top:1px solid {{T.border}}"><span style="color:{{T.textSecondary}}">Practice questions completed</span><span style="color:{{T.accent}};font-weight:800;font-size:13px">{{studentDetail.practiceCompleted}}</span></div>
+        </div>
+      </div>
+
+      <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:12px;padding:14px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase;margin-bottom:8px">Accuracy trend (6 weeks)</div>
+        <svg viewBox="0 0 300 78" width="100%" height="78" style="overflow:visible">
+          <path d="{{studentDetail.trendPath}}" fill="none" stroke="{{T.accent}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <sc-for list="{{studentDetail.trendPoints}}" as="tp2" hint-placeholder-count="6"><circle cx="{{tp2.x}}" cy="{{tp2.y}}" r="3" fill="{{T.accent}}"/></sc-for>
+        </svg>
+      </div>
+
+      <div style="background:{{T.surface}};border:1px solid {{T.border}};border-radius:12px;padding:14px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase;margin-bottom:8px">Resources used</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <sc-for list="{{studentDetail.resources}}" as="rs" hint-placeholder-count="2"><div style="font-size:12.5px;color:{{T.textPrimary}};font-weight:500">📄 {{rs}}</div></sc-for>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:11px;font-weight:700;color:{{T.textTertiary}};text-transform:uppercase;margin-bottom:8px">Teacher notes</div>
+        <textarea value="{{teacherNotesDraft}}" onChange="{{setTeacherNotesDraft}}" placeholder="Add private notes about this student..." rows="3" style="width:100%;box-sizing:border-box;background:{{T.surfaceSecondary}};border:1px solid {{T.border}};border-radius:10px;padding:10px 12px;font-size:13px;font-family:inherit;color:{{T.textPrimary}};resize:none"></textarea>
+        <button onClick="{{saveTeacherNotes}}" style="margin-top:9px;background:{{T.primary}};color:{{T.primaryText}};border:none;border-radius:9px;padding:8px 15px;font-size:12.5px;font-weight:700;cursor:pointer">Save notes</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+</sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const SOURCES = {
+  robbins:{id:'robbins',title:'Robbins Pathology',type:'Book',icon:'📘',section:'Ch. 20 – The Kidney',excerpt:'Pre-renal azotemia is the most common cause of AKI in hospitalized patients and results from a reduction in effective renal blood flow, activating compensatory autoregulatory mechanisms before intrinsic damage occurs.',locType:'page',pageLabel:'Page 412'},
+  lecture:{id:'lecture',title:'Lecture Sheet – Renal System',type:'Lecture Sheet',icon:'📄',section:'Slide 14',excerpt:'AKI is classified by the anatomical level of injury: pre-renal (perfusion), intrinsic/renal (parenchymal), and post-renal (obstructive) causes.',locType:'page',pageLabel:'Slide 14'},
+  harrison:{id:'harrison',title:"Harrison's Principles of Internal Medicine",type:'Textbook',icon:'📚',section:'Ch. 311',excerpt:'Intrinsic renal causes of AKI include acute tubular necrosis, glomerulonephritis, and acute interstitial nephritis, each with distinct urinary findings.',locType:'page',pageLabel:'Page 2249'},
+  video:{id:'video',title:'Renal Physiology Lecture',type:'Video',icon:'🎥',section:'12:40–15:02',excerpt:'Discussion of glomerular filtration rate autoregulation via the myogenic response and tubuloglomerular feedback under conditions of reduced perfusion.',locType:'video',pageLabel:'12:40',seekSeconds:760,durationSeconds:1200}
+};
+const HOW_STEPS=[{label:'Question understood'},{label:'Selected resources'},{label:'Retrieved evidence'},{label:'AI-generated explanation'},{label:'Confidence assessment'}];
+const FOLDERS=[{name:'Data Science',count:4},{name:'Medicine',count:12},{name:'Pharmacology',count:7},{name:'Pathology',count:9},{name:'Anatomy',count:5},{name:'Physiology',count:6}];
+const CHATS=[{id:'aki',title:'Acute Kidney Injury',date:'Sep 24'},{id:'bb',title:'Pharmacology – Beta Blockers',date:'Sep 24'},{id:'cc',title:'Cardiac Cycle',date:'Sep 23'},{id:'ts',title:'Time Series Models',date:'Sep 23'},{id:'ml',title:'ML Project Ideas',date:'Sep 22'},{id:'sp',title:'Study Plan',date:'Sep 22'}];
+const DEPENDENCY=[{d:'Sep 18',v:20},{d:'Sep 19',v:45},{d:'Sep 20',v:42},{d:'Sep 21',v:65},{d:'Sep 22',v:50},{d:'Sep 23',v:55},{d:'Sep 24',v:69}];
+const RESOURCE_LIB=[
+  {id:'r1',name:'Robbins Pathology',type:'Book',subject:'Pathology',uploaded:'Aug 12',usage:24,status:'Active'},
+  {id:'r2',name:'Lecture 07 – Renal System',type:'Lecture Sheet',subject:'Physiology',uploaded:'Sep 02',usage:12,status:'Active'},
+  {id:'r3',name:"Harrison's Principles of Internal Medicine",type:'Textbook',subject:'Medicine',uploaded:'Jul 20',usage:31,status:'Active'},
+  {id:'r4',name:'Renal Physiology Lecture',type:'Video',subject:'Physiology',uploaded:'Sep 10',usage:9,status:'Active'},
+  {id:'r5',name:'Personal Class Notes – Pharmacology',type:'Personal Notes',subject:'Pharmacology',uploaded:'Sep 18',usage:5,status:'Draft'},
+  {id:'r6',name:'Beta Blockers Guide',type:'Guide',subject:'Pharmacology',uploaded:'Sep 15',usage:15,status:'Active'}
+];
+const INSIGHTS=['Your AI usage has increased this week.','Most of your questions are from Pathology.','You verify sources frequently before continuing.','You have completed 42 practice questions this week.','Consider switching to Practice Mode after studying a topic.'];
+const PRACTICE_TOPIC = 'Acute Kidney Injury';
+const TYPE_LABELS = {mcq:'MCQ', true_false:'True/False', sba:'SBA', short_answer:'Short Answer', case:'Case-based'};
+const EXAM_QUESTIONS = [
+  {id:'e1', type:'mcq', difficulty:'Medium', question:'A 65-year-old patient presents with oliguria following severe dehydration. Which mechanism most directly explains the reduction in GFR?', options:['Increased renal blood flow','Reduced renal perfusion','Increased glomerular permeability','Increased tubular secretion'], correct:1, explanation:'Severe dehydration causes hypovolemia, lowering renal perfusion pressure. Autoregulatory mechanisms compensate initially, but once they fail, GFR falls directly due to reduced perfusion — the hallmark of pre-renal AKI.', sources:[SOURCES.robbins,SOURCES.harrison], years:[2021,2022,2024], probability:78, importance:'High'},
+  {id:'e2', type:'true_false', difficulty:'Easy', question:'Pre-renal AKI is typically reversible if renal perfusion is restored early, before intrinsic tubular damage occurs.', options:['True','False'], correct:0, explanation:'Correct — pre-renal AKI is a functional response to hypoperfusion. If corrected promptly, the kidney recovers without structural injury; delayed correction can progress to acute tubular necrosis.', sources:[SOURCES.lecture], years:[2020,2023], probability:52, importance:'Medium'},
+  {id:'e3', type:'sba', difficulty:'Hard', question:'Which single laboratory finding best differentiates pre-renal AKI from acute tubular necrosis?', options:['Elevated serum creatinine','Low urine osmolality','Fractional excretion of sodium (FeNa) < 1%','Presence of proteinuria'], correct:2, explanation:'FeNa < 1% reflects intact tubular sodium reabsorption, characteristic of pre-renal AKI. In ATN, tubular damage impairs reabsorption, so FeNa typically exceeds 2%.', sources:[SOURCES.harrison], years:[2019,2021,2022,2023], probability:85, importance:'High'},
+  {id:'e4', type:'short_answer', difficulty:'Medium', question:'Briefly explain why FeNa (fractional excretion of sodium) is low in pre-renal AKI.', modelAnswer:'In pre-renal AKI, tubular architecture is intact, so the nephron responds to reduced perfusion by avidly reabsorbing sodium and water to preserve intravascular volume — driven by activation of the renin-angiotensin-aldosterone system. This intact reabsorptive capacity keeps FeNa low (<1%), unlike in ATN where tubular damage impairs reabsorption.', sources:[SOURCES.robbins], years:[2022,2024], probability:63, importance:'Medium'},
+  {id:'e5', type:'case', difficulty:'Hard', question:'A 70-year-old on chronic NSAIDs presents with rising creatinine and oliguria after a diarrheal illness. Which mechanism best explains this presentation?', options:['NSAID-induced impairment of compensatory vasodilation during hypovolemia','Direct NSAID nephrotoxicity causing acute interstitial nephritis','Obstructive uropathy from dehydration-related stone formation','Autoimmune glomerulonephritis triggered by the diarrheal illness'], correct:0, explanation:'NSAIDs inhibit prostaglandin-mediated afferent arteriolar vasodilation. In a hypovolemic state (from diarrhea), this compensatory vasodilation is critical to maintaining GFR — its loss precipitates pre-renal AKI.', sources:[SOURCES.harrison,SOURCES.robbins], years:[2023,2024], probability:71, importance:'High'}
+];
+const AI_QUESTIONS = [
+  {id:'a1', type:'mcq', difficulty:'Medium', question:'Which of the following best explains why urine output can remain normal in early pre-renal AKI despite falling GFR?', options:['Increased tubular secretion of creatinine','Compensatory increase in single-nephron filtration in unaffected nephrons','Autoregulatory tubular reabsorption maintaining urine flow despite low GFR','Concurrent diabetes insipidus'], correct:2, explanation:'Autoregulatory mechanisms preserve tubular function even as GFR falls, so urine output can be relatively preserved in the earliest stages before oliguria sets in.', sources:[SOURCES.robbins,SOURCES.lecture], whyItMatters:'This nuance is frequently confused with intrinsic AKI in clinical vignettes and is a common source of misdiagnosis in early presentations.'},
+  {id:'a2', type:'true_false', difficulty:'Easy', question:'The myogenic response and tubuloglomerular feedback are two separate mechanisms that both contribute to renal autoregulation.', options:['True','False'], correct:0, explanation:'True. The myogenic response adjusts afferent arteriolar tone to pressure changes, while tubuloglomerular feedback adjusts it based on distal tubular flow/solute sensing — both act to stabilize GFR.', sources:[SOURCES.video], whyItMatters:'Students often conflate these two distinct autoregulatory mechanisms — this tests whether that distinction is understood.'},
+  {id:'a3', type:'sba', difficulty:'Hard', question:'A patient on an ACE inhibitor and an NSAID develops AKI after starting a diuretic. Which combination best explains the mechanism?', options:['Loss of both afferent and efferent arteriolar compensation ("triple whammy")','Isolated efferent arteriolar constriction from the ACE inhibitor alone','Direct tubular toxicity from the diuretic','Volume overload from reduced natriuresis'], correct:0, explanation:'This is the classic "triple whammy": the NSAID blocks afferent vasodilation, the ACE inhibitor blocks efferent vasoconstriction, and the diuretic causes volume depletion — together collapsing glomerular perfusion pressure.', sources:[SOURCES.harrison], whyItMatters:'This drug-interaction pattern integrates pharmacology with renal physiology and is a favorite theme in clinical reasoning and viva questions.'},
+  {id:'a4', type:'short_answer', difficulty:'Medium', question:'Explain, mechanistically, why NSAIDs are particularly risky in a patient who is already volume-depleted.', modelAnswer:'Under normal volume status, renal perfusion is maintained mainly by systemic pressure, and prostaglandins play a minor role. In volume depletion, the kidney depends on prostaglandin-mediated afferent arteriolar vasodilation to preserve GFR. NSAIDs inhibit prostaglandin synthesis, removing this compensation and precipitating a sharp drop in GFR — pre-renal AKI.', sources:[SOURCES.robbins,SOURCES.harrison], whyItMatters:'Builds the exact mechanistic chain examiners probe for in vivas — most students know the fact but not the "why."'}
+];
+const UPLOAD_OPTS=[{icon:'📄',label:'Upload PDF'},{icon:'📝',label:'Upload Lecture Notes'},{icon:'🖼️',label:'Upload Images'},{icon:'🔗',label:'Paste URL'},{icon:'🎥',label:'Add YouTube video'},{icon:'📚',label:'Add textbook / reference'}];
+const SETTINGS_SECTIONS=['Account','Appearance','Privacy','AI Preferences','Resource Management','Notifications','Data & Export'];
+const LOCATION_OPTIONS=['Bangladesh','India','Pakistan','United Kingdom','United States','Global (WHO)'];
+const PERF_BY_TYPE=[{label:'MCQ',value:82},{label:'True/False',value:88},{label:'SBA',value:65},{label:'Short Answer',value:70},{label:'Case-based',value:60}];
+const PERF_BY_SOURCE=[{label:'Exam-frequent questions',value:78},{label:'AI-generated questions',value:71}];
+const WEAK_TOPICS=[{rank:1,topic:'Electrolyte disorders',accuracy:52},{rank:2,topic:'Acid-base balance',accuracy:58},{rank:3,topic:'Renal pharmacology',accuracy:64}];
+const PERF_TREND=[{w:'Wk1',v:60},{w:'Wk2',v:64},{w:'Wk3',v:61},{w:'Wk4',v:70},{w:'Wk5',v:74},{w:'Wk6',v:78}];
+const STUDY_ADVICE=['Review Acid-base balance before your next exam — accuracy dropped 12% in the past week.','Your SBA accuracy trails MCQ by 17% — practice more single-best-answer sets on Renal topics.','You are answering AI-generated questions less often than exam-frequent ones — try a balanced mix to catch gaps standard papers miss.','Electrolyte disorders remains your lowest-accuracy topic across 3 weeks — consider a focused review session.'];
+
+const TEACHER_NAV=['Overview','Students','Leaderboard','Assignments','Alerts','Announcements','Reports'];
+const CLASS_TOPICS=['Renal System','Cardiology','Pharmacology','Neurology','Endocrinology','Acid-Base & Electrolytes'];
+const QUESTION_TYPES=['MCQ','True/False','SBA','Short Answer','Case-based'];
+const STUDENT_NAMES=['Ayesha Rahman','Tanvir Ahmed','Nusrat Jahan','Rafiul Islam','Farhana Akter','Shuvo Chowdhury','Mehnaz Sultana','Imran Kabir','Sadia Islam','Rakibul Hasan','Tasnia Ferdous','Anisur Rahman','Priyanka Das','Mahmudul Hasan','Nabila Haque','Zubayer Ahmed','Fahmida Sultana','Ovi Hossain','Ruksana Begum','Shakil Ahmed'];
+function seededRand(seed){ let s=seed; return () => { s=(s*9301+49297)%233280; return s/233280; }; }
+function makeTrend(values,w,h,pad){
+  const step=(w-2*pad)/(values.length-1);
+  const pts=values.map((v,i)=>({x:pad+i*step, y:h-pad-(Math.max(0,Math.min(100,v))/100)*(h-2*pad)}));
+  return {points:pts, path: pts.map((p,i)=>(i===0?'M':'L')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ')};
+}
+const STUDENTS = STUDENT_NAMES.map((name,i) => {
+  const rand = seededRand(i*53+7);
+  const accuracy = Math.round(52+rand()*40);
+  const dependency = Math.round(28+rand()*58);
+  const practiceCompleted = Math.round(30+rand()*170);
+  const daysInactive = Math.floor(rand()*9);
+  const examAcc = Math.max(30, Math.round(accuracy + (rand()*10-3)));
+  const aiAcc = Math.max(25, Math.round(accuracy - rand()*12));
+  const weak1 = CLASS_TOPICS[i%CLASS_TOPICS.length];
+  const weak2 = CLASS_TOPICS[(i+2)%CLASS_TOPICS.length];
+  const trend = Array.from({length:6},(_,w)=>Math.max(35,Math.min(96, accuracy-15+w*3+Math.round(rand()*8-4))));
+  const initials = name.split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
+  const flags=[];
+  if(accuracy<62) flags.push('Low accuracy');
+  if(dependency>78) flags.push('High AI dependency');
+  if(daysInactive>=6) flags.push('Inactive');
+  return {
+    id:'s'+(i+1), name, initials, batch:'3rd Year · Batch '+String.fromCharCode(65+(i%4)),
+    accuracy, dependency, practiceCompleted, lastActive: daysInactive===0?'Today':daysInactive+'d ago',
+    flags, atRisk: flags.length>0, weakTopics:[weak1,weak2], trend,
+    perfByType:[{label:'MCQ',value:Math.min(97,accuracy+8)},{label:'SBA',value:Math.max(32,accuracy-10)},{label:'Case-based',value:Math.max(28,accuracy-16)},{label:'Short Answer',value:Math.max(38,accuracy-4)}],
+    examVsAi:[{label:'Exam-frequent',value:examAcc},{label:'AI-generated',value:aiAcc}],
+    resources:['Robbins Pathology',"Harrison's Principles of Internal Medicine",'Lecture Sheet – Renal System','Renal Physiology Lecture'].slice(0,2+(i%2)),
+    learningBalance:[
+      {label:'AI-assisted learning', value: dependency},
+      {label:'Independent practice', value: Math.max(20, 100-dependency-Math.round(rand()*15))},
+      {label:'Source verification', value: Math.min(96, Math.round(accuracy+rand()*14))}
+    ],
+    notes: i===0 ? 'Strong grasp of pathology; needs to slow down on SBA time management.' : ''
+  };
+});
+
+function theme(isDark){
+  return isDark ? {
+    bg:'#092328',surface:'#12544F',surfaceSecondary:'#0D3E3A',surfaceElevated:'#165D55',
+    primary:'#2A835F',primaryHover:'#34996F',primaryText:'#FFFFFF',
+    accent:'#8BBB92',accentSoft:'rgba(139,187,146,0.16)',
+    textPrimary:'#F6FBF7',textSecondary:'#B9D7BC',textTertiary:'#7FA284',
+    border:'rgba(139,187,146,0.18)',borderStrong:'rgba(139,187,146,0.32)',
+    success:'#8BBB92',warning:'#E0B36B',danger:'#E3927E',chipBg:'#0D3E3A',
+    shadowSm:'0 1px 2px rgba(0,0,0,0.25)',shadowMd:'0 10px 28px rgba(0,0,0,0.35)',inputBg:'#0D3E3A'
+  } : {
+    bg:'#F8F7F2',surface:'#FFFFFF',surfaceSecondary:'#F1EEE4',surfaceElevated:'#FFFFFF',
+    primary:'#5A3828',primaryHover:'#472C1F',primaryText:'#FFFFFF',
+    accent:'#2A835F',accentSoft:'rgba(42,131,95,0.12)',
+    textPrimary:'#2B1D14',textSecondary:'#76513E',textTertiary:'#9C8776',
+    border:'rgba(90,56,40,0.14)',borderStrong:'rgba(90,56,40,0.28)',
+    success:'#2A835F',warning:'#B8863B',danger:'#B4503B',chipBg:'#F1EEE4',
+    shadowSm:'0 1px 2px rgba(43,29,20,0.06)',shadowMd:'0 6px 20px rgba(43,29,20,0.14)',inputBg:'#FFFFFF'
+  };
+}
+
+class Component extends DCLogic {
+  state = {
+    theme:'light', view:'chat', mode:'study', viewportWidth: typeof window!=='undefined'?window.innerWidth:1400,
+    sidebarQuery:'', activeChatId:'aki', showUpload:false, showCustomize:false, sourcePreviewId:null,
+    resourceSelections:{Books:true,Guides:true,'Lecture Sheets':true,'Class Notes':false,'YouTube Videos':false},
+    viewerSourceId:null,
+    audioOpen:false, audioPlaying:false, audioTrackIndex:0, audioProgress:0, audioSpeed:1,
+    messages:[
+      {id:1, role:'user', text:'What are the major causes of acute kidney injury?'},
+      {id:2, role:'ai', text:"Acute kidney injury (AKI) can broadly be classified into three categories:\n\n1. Pre-renal — reduced renal perfusion (e.g. dehydration, hypotension, heart failure)\n2. Intrinsic renal — direct damage to nephron structures (e.g. acute tubular necrosis, glomerulonephritis)\n3. Post-renal — obstruction of urine flow (e.g. stones, prostatic enlargement)\n\nPre-renal AKI results from reduced renal perfusion, which activates autoregulatory mechanisms to preserve GFR. If hypoperfusion persists or worsens, it can progress to intrinsic damage such as acute tubular necrosis.", confidence:93, sources:[SOURCES.robbins,SOURCES.lecture,SOURCES.harrison,SOURCES.video], confidenceOpen:false, howOpen:false, showTrust:true}
+    ],
+    draftMessage:'', isTyping:false,
+    practiceSource:'exam', practiceTypeFilter:'All', practiceDifficultyFilter:'All', practiceSortBy:'importance', practiceAnsweredFilter:'All',
+    practiceModalId:null, practiceAnswers:{}, shortAnswerDraft:'',
+    profileEditing:false, settingsSection:'Account', practiceLocation:'Bangladesh',
+    hoveredPointIdx:null, resourceQuery:'', resourceLibrary:RESOURCE_LIB, folders:FOLDERS,
+    dependencyInfoOpen:false,
+    customizeForm:{theme:'light',style:'Balanced',level:'Pre-clinical',language:'English',terminology:'Standard',showSources:true,showConfidence:true,showInsights:true,showVisualizations:true,guidelineLocation:null},
+    role:'student', teacherView:'Overview', teacherStudentQuery:'', teacherDetailId:null, teacherNotesDraft:'',
+    assignForm:{topic:CLASS_TOPICS[0], difficulty:'Medium', type:'MCQ', target:'class', studentId:STUDENTS[0].id, dueDate:''},
+    assignments:[{id:1, topic:'Renal System', type:'MCQ', difficulty:'Medium', due:'Oct 3', target:'Whole class'}],
+    announcementDraft:'', announcements:[{id:1, text:'Practice session on Acid-Base balance scheduled for Friday.', date:'Sep 26'}]
+  };
+
+  rootRef = React.createRef();
+  _measure = () => {
+    const w = this.rootRef.current ? this.rootRef.current.getBoundingClientRect().width : 0;
+    if(w > 0) this.setState({viewportWidth: w});
+  };
+  componentDidMount(){
+    this._measure();
+    // re-measure across a few frames/timeouts to catch late layout settling (fonts, streaming content)
+    requestAnimationFrame(() => { this._measure(); requestAnimationFrame(this._measure); });
+    this._settleTimers = [50,150,300,600,1000].map(t => setTimeout(this._measure, t));
+    this._onWinResize = this._measure;
+    window.addEventListener('resize', this._onWinResize);
+    if(this.rootRef.current){
+      this._ro = new ResizeObserver(() => this._measure());
+      this._ro.observe(this.rootRef.current);
+    }
+  }
+  componentWillUnmount(){
+    if(this._ro) this._ro.disconnect();
+    if(this._audioTimer) clearInterval(this._audioTimer);
+    if(this._onWinResize) window.removeEventListener('resize', this._onWinResize);
+    if(this._settleTimers) this._settleTimers.forEach(clearTimeout);
+  }
+
+  _aiMessages(){ return this.state.messages.filter(m => m.role==='ai'); }
+  _startAudioTimer(){
+    if(this._audioTimer) clearInterval(this._audioTimer);
+    this._audioTimer = setInterval(() => {
+      this.setState(s => {
+        if(!s.audioPlaying) return null;
+        const step = 2.2 * s.audioSpeed;
+        let next = s.audioProgress + step;
+        if(next >= 100){
+          const tracks = this._aiMessages();
+          const lastIdx = tracks.length-1;
+          if(s.audioTrackIndex >= lastIdx) return {audioProgress:100, audioPlaying:false};
+          return {audioTrackIndex: s.audioTrackIndex+1, audioProgress:0};
+        }
+        return {audioProgress: next};
+      });
+    }, 200);
+  }
+  openAudiobook = () => { this.setState({audioOpen:true, audioPlaying:true, audioTrackIndex:0, audioProgress:0}); this._startAudioTimer(); };
+  closeAudiobook = () => { this.setState({audioOpen:false, audioPlaying:false}); if(this._audioTimer) clearInterval(this._audioTimer); };
+  audioTogglePlay = () => this.setState(s => ({audioPlaying: !s.audioPlaying}));
+  audioPrev = () => this.setState(s => ({audioTrackIndex: Math.max(0, s.audioTrackIndex-1), audioProgress:0}));
+  audioNext = () => this.setState(s => { const tracks=this._aiMessages(); return {audioTrackIndex: Math.min(tracks.length-1, s.audioTrackIndex+1), audioProgress:0}; });
+  audioCycleSpeed = () => this.setState(s => { const speeds=[1,1.25,1.5,2]; const i=speeds.indexOf(s.audioSpeed); return {audioSpeed: speeds[(i+1)%speeds.length]}; });
+  listenToMessage = (idx) => { const tracks=this._aiMessages(); const i=tracks.findIndex((m,ix)=>ix===idx); this.setState({audioOpen:true, audioPlaying:true, audioTrackIndex: i>=0?i:0, audioProgress:0}); this._startAudioTimer(); };
+
+  stop = (e) => { if(e&&e.stopPropagation) e.stopPropagation(); };
+
+  toggleTheme = () => this.setState(s => ({theme: s.theme==='dark'?'light':'dark'}));
+  switchToTeacher = () => this.setState({role:'teacher', teacherView:'Overview'});
+  switchToStudent = () => this.setState({role:'student'});
+  setTeacherView = (v) => this.setState({teacherView:v});
+  openStudentDetail = (id) => this.setState({teacherDetailId:id, teacherNotesDraft: (STUDENTS.find(s=>s.id===id)||{}).notes||''});
+  closeStudentDetail = () => this.setState({teacherDetailId:null});
+  setTeacherStudentQuery = (e) => this.setState({teacherStudentQuery:e.target.value});
+  setTeacherNotesDraft = (e) => this.setState({teacherNotesDraft:e.target.value});
+  saveTeacherNotes = () => { const st=STUDENTS.find(s=>s.id===this.state.teacherDetailId); if(st) st.notes=this.state.teacherNotesDraft; this.forceUpdate(); };
+  setAssignField = (field,val) => this.setState(s => ({assignForm:{...s.assignForm,[field]:val}}));
+  addAssignment = () => this.setState(s => {
+    const f=s.assignForm;
+    const targetLabel = f.target==='class' ? 'Whole class' : ((STUDENTS.find(x=>x.id===f.studentId)||{}).name||'Student');
+    return {assignments:[{id:Date.now(), topic:f.topic, type:f.type, difficulty:f.difficulty, due:f.dueDate||'No due date', target:targetLabel}, ...s.assignments]};
+  });
+  removeAssignment = (id) => this.setState(s => ({assignments: s.assignments.filter(a => a.id!==id)}));
+  setAnnouncementDraft = (e) => this.setState({announcementDraft: e.target.value});
+  sendAnnouncement = () => { const t=this.state.announcementDraft.trim(); if(!t) return; this.setState(s => ({announcements:[{id:Date.now(), text:t, date:'Just now'}, ...s.announcements], announcementDraft:''})); };
+  newChat = () => this.setState({mode:'study', activeChatId:null, messages:[]});
+  addFolder = () => this.setState(s => ({folders:[...s.folders, {name:'New Folder', count:0}]}));
+  setSidebarQuery = (e) => this.setState({sidebarQuery: e.target.value});
+  setResourceQuery = (e) => this.setState({resourceQuery: e.target.value});
+  goProfile = () => this.setState({view:'profile'});
+  goSettings = () => this.setState({view:'settings'});
+  goChat = () => this.setState({view:'chat'});
+  goResources = () => this.setState({view:'resources'});
+  goInsights = () => this.setState({view:'insights'});
+  setStudyMode = () => this.setState({mode:'study'});
+  setPracticeMode = () => this.setState({mode:'practice'});
+  openCustomize = () => this.setState(s => ({showCustomize:true, customizeForm:{...s.customizeForm, theme:s.theme, guidelineLocation: s.customizeForm.guidelineLocation || s.practiceLocation}}));
+  setPracticeLocation = (e) => { const val = e.target.value; this.setState(s => ({practiceLocation: val, customizeForm: s.customizeForm.guidelineLocation===s.practiceLocation ? {...s.customizeForm, guidelineLocation: val} : s.customizeForm})); };
+  closeCustomize = () => this.setState({showCustomize:false});
+  saveCustomize = () => this.setState(s => ({showCustomize:false, theme: s.customizeForm.theme==='dark'?'dark':'light'}));
+  openUpload = () => this.setState({showUpload:true});
+  closeUpload = () => this.setState({showUpload:false});
+  closeSourcePreview = () => this.setState({sourcePreviewId:null});
+  openViewer = (id) => this.setState({viewerSourceId:id, sourcePreviewId:null});
+  closeViewer = () => this.setState({viewerSourceId:null});
+  toggleProfileEdit = () => this.setState(s => ({profileEditing:!s.profileEditing}));
+  toggleDependencyInfo = () => this.setState(s => ({dependencyInfoOpen:!s.dependencyInfoOpen}));
+
+  setDraft = (e) => this.setState({draftMessage: e.target.value});
+  onDraftKey = (e) => { if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); this.sendMessage(); } };
+  sendMessage = () => {
+    const text = this.state.draftMessage.trim();
+    if(!text) return;
+    const uid = Date.now();
+    this.setState(s => ({messages:[...s.messages,{id:uid,role:'user',text}], draftMessage:'', isTyping:true}));
+    setTimeout(() => {
+      const conf = 85 + Math.floor(Math.random()*10);
+      this.setState(s => ({isTyping:false, messages:[...s.messages,{
+        id:uid+1, role:'ai',
+        text:"Based on your selected resources, here is a focused explanation:\n\nThe mechanism you're asking about follows the same evidence chain used above — reduced perfusion or direct structural injury alters glomerular filtration. Reviewing the linked sources will show the underlying pathophysiology in more depth.",
+        confidence:conf, sources:[SOURCES.robbins,SOURCES.lecture], confidenceOpen:false, howOpen:false, showTrust:true
+      }]}));
+    }, 1100);
+  };
+
+  setExamSource = () => this.setState({practiceSource:'exam'});
+  setAiSource = () => this.setState({practiceSource:'ai'});
+  setTypeFilter = (t) => this.setState({practiceTypeFilter:t});
+  setDifficultyFilter = (d) => this.setState({practiceDifficultyFilter:d});
+  setSortBy = (v) => this.setState({practiceSortBy:v});
+  setAnsweredFilter = (v) => this.setState({practiceAnsweredFilter:v});
+  openPracticeQuestion = (id) => this.setState({practiceModalId:id, shortAnswerDraft:''});
+  closePracticeModal = () => this.setState({practiceModalId:null});
+  selectPracticeOption = (id, idx) => this.setState(s => ({practiceAnswers:{...s.practiceAnswers, [id]:{...(s.practiceAnswers[id]||{}), selected:idx}}}));
+  submitModalAnswer = () => this.setState(s => { const cur=s.practiceAnswers[s.practiceModalId]||{}; if(cur.selected==null) return null; return {practiceAnswers:{...s.practiceAnswers, [s.practiceModalId]:{...cur, submitted:true}}}; });
+  setShortAnswerDraft = (e) => this.setState({shortAnswerDraft: e.target.value});
+  revealModelAnswer = () => this.setState(s => ({practiceAnswers:{...s.practiceAnswers, [s.practiceModalId]:{...(s.practiceAnswers[s.practiceModalId]||{}), revealed:true}}}));
+
+  renderVals(){
+    const s = this.state;
+    const isDark = s.theme==='dark';
+    const T = theme(isDark);
+    const vw = s.viewportWidth;
+    const isMobile = vw < 760;
+    const isTablet = vw >= 760 && vw < 1120;
+    const isDesktop = vw >= 1120;
+    const isChatView = s.view==='chat';
+
+    const filteredChats = CHATS.filter(c => c.title.toLowerCase().includes(s.sidebarQuery.toLowerCase())).map(c => ({
+      ...c,
+      select: () => this.setState({view:'chat', activeChatId:c.id}),
+      bg: c.id===s.activeChatId ? T.accentSoft : 'transparent',
+      color: c.id===s.activeChatId ? T.accent : T.textPrimary,
+      stripe: c.id===s.activeChatId ? T.accent : 'transparent'
+    }));
+    const activeChat = CHATS.find(c => c.id===s.activeChatId);
+    const activeChatTitle = activeChat ? activeChat.title : 'New Chat';
+
+    const folders = s.folders.map(f => ({...f, bg:'transparent', select: () => {}}));
+
+    const resourceLabels = ['Books','Guides','Lecture Sheets','Class Notes','YouTube Videos'];
+    const resourceToggleList = resourceLabels.map(label => ({
+      label, checked: !!s.resourceSelections[label],
+      toggle: () => this.setState(st => ({resourceSelections:{...st.resourceSelections,[label]:!st.resourceSelections[label]}}))
+    }));
+    const resourceNameMap = {'Books':'Robbins Pathology','Guides':'Beta Blockers Guide','Lecture Sheets':'Lecture 7 – Renal System','Class Notes':'Personal Class Notes','YouTube Videos':'Renal Physiology Lecture'};
+    const selectedResourceChips = resourceLabels.filter(l => s.resourceSelections[l]).map(l => resourceNameMap[l]);
+
+    let aiIdx = -1;
+    const messages = s.messages.map(m => {
+      if(m.role==='ai') aiIdx++;
+      const thisAiIdx = aiIdx;
+      return {
+        ...m, isUser: m.role==='user', isAi: m.role==='ai',
+        confidenceWidth: (m.confidence||0)+'%',
+        confidenceOpen: !!m.confidenceOpen,
+        howOpen: !!m.howOpen,
+        howArrow: m.howOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+        toggleConfidence: () => this.setState(st => ({messages: st.messages.map(mm => mm.id===m.id ? {...mm, confidenceOpen: !mm.confidenceOpen} : mm)})),
+        toggleHow: () => this.setState(st => ({messages: st.messages.map(mm => mm.id===m.id ? {...mm, howOpen: !mm.howOpen} : mm)})),
+        sources: (m.sources||[]).map(src => ({...src, open: () => this.setState({sourcePreviewId: src.id})})),
+        listen: () => this.listenToMessage(thisAiIdx)
+      };
+    });
+
+    const suggestedActions = ['Explain simply','Summarize','Give an example','Quiz me','Create flashcards'].map(label => ({label, run: () => this.setState({draftMessage: label + ': ' })}));
+
+    const difficulties = ['All','Easy','Medium','Hard'].map(label => ({
+      label, select: () => this.setDifficultyFilter(label),
+      bg: label===s.practiceDifficultyFilter ? T.primary : 'transparent',
+      color: label===s.practiceDifficultyFilter ? T.primaryText : T.textSecondary
+    }));
+    const typeFilterDefs = ['All','mcq','true_false','sba','short_answer','case'];
+    const typeFilters = typeFilterDefs.map(v => ({
+      label: v==='All'?'All':TYPE_LABELS[v], select: () => this.setTypeFilter(v),
+      bg: v===s.practiceTypeFilter ? T.primary : 'transparent',
+      color: v===s.practiceTypeFilter ? T.primaryText : T.textSecondary
+    }));
+    const sortOptions = [{v:'importance',label:'Priority'},{v:'recent',label:'Recent year'}].map(o => ({
+      label:o.label, select: () => this.setSortBy(o.v),
+      bg: o.v===s.practiceSortBy ? T.primary : 'transparent',
+      color: o.v===s.practiceSortBy ? T.primaryText : T.textSecondary
+    }));
+    const answeredFilters = ['All','Answered','Unanswered'].map(label => ({
+      label, select: () => this.setAnsweredFilter(label),
+      bg: label===s.practiceAnsweredFilter ? T.primary : 'transparent',
+      color: label===s.practiceAnsweredFilter ? T.primaryText : T.textSecondary
+    }));
+
+    const isExamSource = s.practiceSource==='exam';
+    const importanceRank = {High:3, Medium:2, Low:1};
+    const isAnswered = (id) => { const a = s.practiceAnswers[id]; return !!(a && (a.submitted || a.revealed)); };
+    let pool = (isExamSource ? EXAM_QUESTIONS : AI_QUESTIONS).slice();
+    if(s.practiceTypeFilter!=='All') pool = pool.filter(q => q.type===s.practiceTypeFilter);
+    if(s.practiceDifficultyFilter!=='All') pool = pool.filter(q => q.difficulty===s.practiceDifficultyFilter);
+    if(s.practiceAnsweredFilter==='Answered') pool = pool.filter(q => isAnswered(q.id));
+    if(s.practiceAnsweredFilter==='Unanswered') pool = pool.filter(q => !isAnswered(q.id));
+    if(isExamSource){
+      if(s.practiceSortBy==='importance') pool.sort((a,b) => (importanceRank[b.importance]-importanceRank[a.importance]) || (b.probability-a.probability));
+      else pool.sort((a,b) => Math.max(...b.years) - Math.max(...a.years));
+    }
+    const diffColors = {Easy:{bg:T.accentSoft,color:T.accent}, Medium:{bg:'rgba(184,134,59,0.14)',color:T.warning}, Hard:{bg:'rgba(180,80,59,0.12)',color:T.danger}};
+    const impColors = {High:{bg:'rgba(180,80,59,0.12)',color:T.danger}, Medium:{bg:'rgba(184,134,59,0.14)',color:T.warning}, Low:{bg:T.accentSoft,color:T.accent}};
+    const questionList = pool.map(q => ({
+      ...q, isExam: q.type!=='__never', isAi: !isExamSource,
+      typeLabel: TYPE_LABELS[q.type], answered: isAnswered(q.id),
+      yearsText: q.years ? q.years.join(', ') : '', probabilityWidth: (q.probability||0)+'%',
+      diffBg: diffColors[q.difficulty].bg, diffColor: diffColors[q.difficulty].color,
+      importanceBg: q.importance ? impColors[q.importance].bg : T.chipBg,
+      importanceColor: q.importance ? impColors[q.importance].color : T.textSecondary,
+      open: () => this.openPracticeQuestion(q.id)
+    })).map(q => isExamSource ? q : {...q, isExam:false, isAi:true});
+
+    const activeQData = s.practiceModalId ? [...EXAM_QUESTIONS,...AI_QUESTIONS].find(q => q.id===s.practiceModalId) : null;
+    let modalQ = {};
+    if(activeQData){
+      const ans = s.practiceAnswers[activeQData.id] || {};
+      const isShortAnswer = activeQData.type==='short_answer';
+      const hasOptions = !isShortAnswer;
+      const noSelection = ans.selected==null;
+      const submitted = !!ans.submitted;
+      const isCorrectFinal = ans.selected===activeQData.correct;
+      const options = hasOptions ? activeQData.options.map((text,i) => {
+        const letter = String.fromCharCode(65+i);
+        const isSelected = ans.selected===i;
+        const isCorrect = i===activeQData.correct;
+        let bg=T.surface, border=T.border, color=T.textPrimary, dotBg='transparent', dotBorder=T.border, dotColor=T.textTertiary;
+        if(!submitted && isSelected){ bg=T.accentSoft; border=T.accent; dotBg=T.accent; dotBorder=T.accent; dotColor=T.primaryText; }
+        if(submitted){
+          if(isCorrect){ bg=T.accentSoft; border=T.success; dotBg=T.success; dotBorder=T.success; dotColor='#fff'; }
+          else if(isSelected){ bg='transparent'; border=T.danger; dotBg=T.danger; dotBorder=T.danger; dotColor='#fff'; }
+        }
+        return {letter, text, bg, border, color, dotBg, dotBorder, dotColor, select: () => !submitted && this.selectPracticeOption(activeQData.id, i)};
+      }) : [];
+      modalQ = {
+        ...activeQData, typeLabel: TYPE_LABELS[activeQData.type], isExam: s.practiceSource==='exam' && !!activeQData.years, isAi: !activeQData.years,
+        yearsText: activeQData.years ? activeQData.years.join(', ') : '',
+        diffBg: diffColors[activeQData.difficulty].bg, diffColor: diffColors[activeQData.difficulty].color,
+        importanceColor: activeQData.importance ? impColors[activeQData.importance].color : T.textSecondary,
+        isShortAnswer, hasOptions, options, noSelection, submitted, notSubmitted: !submitted,
+        submitOpacity: noSelection?'0.5':'1', resultColor: isCorrectFinal?T.success:T.danger,
+        resultLabel: isCorrectFinal?'Correct':'Incorrect', resultIconPath: isCorrectFinal?'M8 12l3 3 5-6':'M9 9l6 6M15 9l-6 6',
+        revealed: !!ans.revealed, notRevealed: !ans.revealed, modelAnswer: activeQData.modelAnswer,
+        sources: (activeQData.sources||[])
+      };
+    }
+
+    const dep = DEPENDENCY;
+    const cw=260,ch=84,pad=8,maxV=100;
+    const step=(cw-2*pad)/(dep.length-1);
+    const chartPoints = dep.map((p,i) => {
+      const x = pad + i*step;
+      const y = ch-pad-(p.v/maxV)*(ch-2*pad);
+      const hovered = s.hoveredPointIdx===i;
+      return {x, y, r: hovered?5:3.2, d:p.d, v:p.v,
+        hoverOn: () => this.setState({hoveredPointIdx:i}),
+        hoverOff: () => this.setState({hoveredPointIdx:null})};
+    });
+    const chartPath = chartPoints.map((p,i) => (i===0?'M':'L')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
+    const hasHoveredPoint = s.hoveredPointIdx!=null;
+    const hoveredLabel = hasHoveredPoint ? dep[s.hoveredPointIdx].d + ' — ' + dep[s.hoveredPointIdx].v + '%' : '';
+
+    const dependencyGradient = `conic-gradient(${T.accent} ${69*3.6}deg, ${T.surfaceSecondary} 0deg)`;
+
+    const learningBalanceBars = [
+      {label:'AI-assisted learning', value:69, color:T.primary},
+      {label:'Independent practice', value:48, color:T.accent},
+      {label:'Source verification', value:82, color:T.accent}
+    ].map(b => ({...b, width: b.value+'%'}));
+
+    const filteredResources = s.resourceLibrary.filter(r => r.name.toLowerCase().includes(s.resourceQuery.toLowerCase())).map(r => ({
+      ...r,
+      statusBg: r.status==='Active' ? T.accentSoft : T.surfaceSecondary,
+      statusColor: r.status==='Active' ? T.accent : T.textTertiary,
+      remove: () => this.setState(st => ({resourceLibrary: st.resourceLibrary.filter(x => x.id!==r.id)}))
+    }));
+
+    const perfByType = PERF_BY_TYPE.map(x => ({...x, width:x.value+'%'}));
+    const perfBySource = PERF_BY_SOURCE.map(x => ({...x, width:x.value+'%'}));
+    const weakTopics = WEAK_TOPICS;
+    const studyAdvice = STUDY_ADVICE;
+    const tcw=400,tch=100,tpad=10;
+    const tstep=(tcw-2*tpad)/(PERF_TREND.length-1);
+    const trendPoints = PERF_TREND.map((p,i) => ({x: tpad+i*tstep, y: tch-tpad-(p.v/100)*(tch-2*tpad)}));
+    const trendPath = trendPoints.map((p,i) => (i===0?'M':'L')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
+    const trendLabels = PERF_TREND.map(p => p.w);
+
+    const profileStats = [
+      {label:'Study streak', value:'14 days'},
+      {label:'Questions answered', value:238},
+      {label:'Practice accuracy', value:'82%'},
+      {label:'Resources uploaded', value:9},
+      {label:'AI-assisted sessions', value:37}
+    ];
+
+    const settingsSections = SETTINGS_SECTIONS.map(label => ({
+      label, select: () => this.setState({settingsSection:label}),
+      bg: label===s.settingsSection ? T.accentSoft : 'transparent',
+      color: label===s.settingsSection ? T.accent : T.textSecondary
+    }));
+
+    const themeOptions = ['Light','Dark','System'].map(label => ({
+      label, checked: (label.toLowerCase()===s.theme) || (label==='System' && false),
+      select: () => this.setState({theme: label==='Dark'?'dark':'light'})
+    }));
+    const privacyToggles = [
+      {label:'Share anonymized study data', checked:true, toggle: () => {}},
+      {label:'Personalized insights', checked:true, toggle: () => {}}
+    ];
+    const responseStyleOptions = ['Concise','Balanced','Detailed'].map(label => ({
+      label, checked: label===s.customizeForm.style,
+      select: () => this.setState(st => ({customizeForm:{...st.customizeForm, style:label}}))
+    }));
+    const prefToggles = [
+      {label:'Show sources', checked: s.customizeForm.showSources, toggle: () => this.setState(st=>({customizeForm:{...st.customizeForm,showSources:!st.customizeForm.showSources}}))},
+      {label:'Show confidence', checked: s.customizeForm.showConfidence, toggle: () => this.setState(st=>({customizeForm:{...st.customizeForm,showConfidence:!st.customizeForm.showConfidence}}))},
+      {label:'Show AI usage insights', checked: s.customizeForm.showInsights, toggle: () => this.setState(st=>({customizeForm:{...st.customizeForm,showInsights:!st.customizeForm.showInsights}}))},
+      {label:'Show visualizations in responses', checked: s.customizeForm.showVisualizations, toggle: () => this.setState(st=>({customizeForm:{...st.customizeForm,showVisualizations:!st.customizeForm.showVisualizations}}))}
+    ];
+    const guidelineLocation = s.customizeForm.guidelineLocation || s.practiceLocation;
+    const setGuidelineLocation = (e) => this.setState(st => ({customizeForm:{...st.customizeForm, guidelineLocation: e.target.value}}));
+
+    const mkOpt = (list, field) => list.map(label => ({
+      label, border: label===s.customizeForm[field]?T.accent:T.border,
+      bg: label===s.customizeForm[field]?T.accentSoft:'transparent',
+      color: label===s.customizeForm[field]?T.accent:T.textSecondary,
+      select: () => this.setState(st => ({customizeForm:{...st.customizeForm,[field]:label}}))
+    }));
+    const customizeThemeOpts = ['Light','Dark','System'].map(label => ({
+      label, border: (label.toLowerCase()===s.customizeForm.theme)?T.accent:T.border,
+      bg: (label.toLowerCase()===s.customizeForm.theme)?T.accentSoft:'transparent',
+      color: (label.toLowerCase()===s.customizeForm.theme)?T.accent:T.textSecondary,
+      select: () => this.setState(st => ({customizeForm:{...st.customizeForm, theme: label==='Dark'?'dark':(label==='Light'?'light':st.theme)}}))
+    }));
+    const customizeStyleOpts = mkOpt(['Concise','Balanced','Detailed'],'style');
+    const customizeLevelOpts = mkOpt(['Pre-clinical','Clinical','Internship'],'level');
+    const customizeLangOpts = mkOpt(['English','Bangla','Banglish'],'language');
+    const customizeTermOpts = mkOpt(['Standard','Simplified'],'terminology');
+    const customizePrefOpts = prefToggles;
+
+    const mobileNavItems = [
+      {label:'Teacher', icon:'🎓', select: this.switchToTeacher, color: T.textTertiary},
+      {label:'New', icon:'➕', select: this.newChat, color: T.textTertiary},
+      {label:'Chat', icon:'💬', select: () => this.setState({view:'chat'}), color: s.view==='chat'?T.accent:T.textTertiary},
+      {label:'Resources', icon:'📚', select: () => this.setState({view:'resources'}), color: s.view==='resources'?T.accent:T.textTertiary},
+      {label:'Insights', icon:'📈', select: () => this.setState({view:'insights'}), color: s.view==='insights'?T.accent:T.textTertiary},
+      {label:'Profile', icon:'👤', select: () => this.setState({view:'profile'}), color: s.view==='profile'?T.accent:T.textTertiary},
+      {label:'Settings', icon:'⚙️', select: () => this.setState({view:'settings'}), color: s.view==='settings'?T.accent:T.textTertiary}
+    ];
+
+    // Teacher dashboard derivations
+    const diffColorsT = {Easy:{bg:T.accentSoft,color:T.accent}, Medium:{bg:'rgba(184,134,59,0.14)',color:T.warning}, Hard:{bg:'rgba(180,80,59,0.12)',color:T.danger}};
+    const teacherNavItems = TEACHER_NAV.map(label => ({label, select: () => this.setTeacherView(label), bg: label===s.teacherView?T.accentSoft:'transparent', color: label===s.teacherView?T.accent:T.textSecondary}));
+    const totalStudents = STUDENTS.length;
+    const atRiskStudents = STUDENTS.filter(x => x.atRisk);
+    const classAvgAccuracy = Math.round(STUDENTS.reduce((a,x)=>a+x.accuracy,0)/totalStudents);
+    const classAvgDependency = Math.round(STUDENTS.reduce((a,x)=>a+x.dependency,0)/totalStudents);
+    const topicCounts = {};
+    STUDENTS.forEach(st => st.weakTopics.forEach(t => topicCounts[t]=(topicCounts[t]||0)+1));
+    const classWeakTopics = Object.entries(topicCounts).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([topic,count]) => ({topic, count, pct: Math.round(count/totalStudents*100)}));
+    const recentAlerts = atRiskStudents.slice(0,4).map(st => ({...st, flagsText: st.flags.join(' · '), open: () => this.openStudentDetail(st.id)}));
+
+    const filteredStudents = STUDENTS.filter(st => st.name.toLowerCase().includes(s.teacherStudentQuery.toLowerCase())).map(st => ({
+      ...st, open: () => this.openStudentDetail(st.id),
+      accColor: st.accuracy>=75?T.success:(st.accuracy>=60?T.warning:T.danger),
+      depColor: st.dependency>=78?T.danger:T.textSecondary
+    }));
+
+    const leaderboard = [...STUDENTS].sort((a,b)=>b.accuracy-a.accuracy).map((st,i) => ({...st, rank:i+1, open: () => this.openStudentDetail(st.id)}));
+
+    const alertsList = atRiskStudents.map(st => ({...st, open: () => this.openStudentDetail(st.id)}));
+
+    const assignTopicOpts = CLASS_TOPICS.map(t => ({label:t, select: () => this.setAssignField('topic',t), bg: t===s.assignForm.topic?T.primary:'transparent', color: t===s.assignForm.topic?T.primaryText:T.textSecondary}));
+    const assignDiffOpts = ['Easy','Medium','Hard'].map(t => ({label:t, select: () => this.setAssignField('difficulty',t), bg: t===s.assignForm.difficulty?T.primary:'transparent', color: t===s.assignForm.difficulty?T.primaryText:T.textSecondary}));
+    const assignTypeOpts = QUESTION_TYPES.map(t => ({label:t, select: () => this.setAssignField('type',t), bg: t===s.assignForm.type?T.primary:'transparent', color: t===s.assignForm.type?T.primaryText:T.textSecondary}));
+    const assignTargetOpts = [{v:'class',label:'Whole class'},{v:'student',label:'Individual student'}].map(o => ({label:o.label, select: () => this.setAssignField('target',o.v), bg: o.v===s.assignForm.target?T.primary:'transparent', color: o.v===s.assignForm.target?T.primaryText:T.textSecondary}));
+    const isIndividualTarget = s.assignForm.target==='student';
+
+    const assignmentsList = s.assignments.map(a => ({...a, remove: () => this.removeAssignment(a.id)}));
+
+    const teacherDetail = s.teacherDetailId ? STUDENTS.find(x => x.id===s.teacherDetailId) : null;
+    let studentDetail = {};
+    if(teacherDetail){
+      const tr = makeTrend(teacherDetail.trend, 300, 78, 8);
+      studentDetail = {
+        ...teacherDetail,
+        accColor: teacherDetail.accuracy>=75?T.success:(teacherDetail.accuracy>=60?T.warning:T.danger),
+        perfByType: teacherDetail.perfByType.map(x=>({...x,width:x.value+'%'})),
+        examVsAi: teacherDetail.examVsAi.map(x=>({...x,width:x.value+'%'})),
+        learningBalance: teacherDetail.learningBalance.map(x=>({...x,width:x.value+'%'})),
+        trendPath: tr.path, trendPoints: tr.points,
+        flagsChips: teacherDetail.flags,
+        hasFlags: teacherDetail.flags.length>0
+      };
+    }
+
+    const sourcePreview = s.sourcePreviewId ? Object.values(SOURCES).find(x => x.id===s.sourcePreviewId) : null;
+    const viewerSource = s.viewerSourceId ? Object.values(SOURCES).find(x => x.id===s.viewerSourceId) : null;
+    const isPageViewer = !!(viewerSource && viewerSource.locType==='page');
+    const isVideoViewer = !!(viewerSource && viewerSource.locType==='video');
+    let viewerScrubberPct = '0%';
+    if(isVideoViewer){ viewerScrubberPct = Math.round((viewerSource.seekSeconds/viewerSource.durationSeconds)*100)+'%'; }
+    const fmtTime = (sec) => { const m=Math.floor(sec/60), s2=sec%60; return m+':'+String(s2).padStart(2,'0'); };
+    const viewerTimeLabel = isVideoViewer ? fmtTime(viewerSource.seekSeconds)+' / '+fmtTime(viewerSource.durationSeconds) : '';
+
+    const aiMessages = s.messages.filter(m => m.role==='ai');
+    const currentTrack = aiMessages[s.audioTrackIndex];
+    const audioTrackLabel = currentTrack ? (currentTrack.text||'').slice(0,44).trim()+'…' : 'No replies yet';
+
+    return {
+      T, isDark, notDark: !isDark,
+      isMobile, isTablet, isDesktop, showBottomNav: isMobile || isTablet,
+      showLeftSidebar: isDesktop,
+      showRightSidebar: isChatView && !isMobile,
+      isChatView, isResourcesView: s.view==='resources', isProfileView: s.view==='profile', isSettingsView: s.view==='settings', isInsightsView: s.view==='insights',
+      isStudyMode: s.mode==='study', isPracticeMode: s.mode==='practice',
+      studyBtnBg: s.mode==='study'?T.primary:'transparent', studyBtnColor: s.mode==='study'?T.primaryText:T.textSecondary,
+      practiceBtnBg: s.mode==='practice'?T.primary:'transparent', practiceBtnColor: s.mode==='practice'?T.primaryText:T.textSecondary,
+      profileRowBg: s.view==='profile'?T.surfaceSecondary:'transparent', settingsRowBg: s.view==='settings'?T.surfaceSecondary:'transparent',
+      toggleTheme: this.toggleTheme, newChat: this.newChat, addFolder: this.addFolder,
+      folders, filteredChats, activeChatTitle,
+      sidebarQuery: s.sidebarQuery, setSidebarQuery: this.setSidebarQuery,
+      goProfile: this.goProfile, goSettings: this.goSettings, goChat: this.goChat,
+      openCustomize: this.openCustomize, closeCustomize: this.closeCustomize, saveCustomize: this.saveCustomize, showCustomize: s.showCustomize,
+      setStudyMode: this.setStudyMode, setPracticeMode: this.setPracticeMode,
+      selectedResourceChips, resourceToggleList,
+      messages, howSteps: HOW_STEPS,
+      isTyping: s.isTyping, suggestedActions,
+      draftMessage: s.draftMessage, setDraft: this.setDraft, onDraftKey: this.onDraftKey, sendMessage: this.sendMessage,
+      practiceTopic: PRACTICE_TOPIC, practiceSourceNote: selectedResourceChips.join(', ') || 'your selected resources', difficulties,
+      typeFilters, sortOptions, answeredFilters, questionList,
+      isExamSource, examSourceBg: isExamSource?T.primary:'transparent', examSourceColor: isExamSource?T.primaryText:T.textSecondary,
+      aiSourceBg: !isExamSource?T.primary:'transparent', aiSourceColor: !isExamSource?T.primaryText:T.textSecondary,
+      setExamSource: this.setExamSource, setAiSource: this.setAiSource,
+      hasPracticeModal: !!activeQData, modalQ, closePracticeModal: this.closePracticeModal, submitModalAnswer: this.submitModalAnswer,
+      shortAnswerDraft: s.shortAnswerDraft, setShortAnswerDraft: this.setShortAnswerDraft, revealModelAnswer: this.revealModelAnswer,
+      openUpload: this.openUpload, closeUpload: this.closeUpload, showUpload: s.showUpload, uploadOptions: UPLOAD_OPTS,
+      hasSourcePreview: !!sourcePreview, sourcePreview: sourcePreview || {}, closeSourcePreview: this.closeSourcePreview, openViewer: () => this.openViewer(sourcePreview && sourcePreview.id),
+      hasViewer: !!viewerSource, viewerSource: viewerSource || {}, closeViewer: this.closeViewer, isPageViewer, isVideoViewer, viewerScrubberPct, viewerTimeLabel,
+      openAudiobook: this.openAudiobook, closeAudiobook: this.closeAudiobook, audioOpen: s.audioOpen,
+      audioPlaying: s.audioPlaying, audioNotPlaying: !s.audioPlaying, audioTogglePlay: this.audioTogglePlay,
+      audioPrev: this.audioPrev, audioNext: this.audioNext, audioCycleSpeed: this.audioCycleSpeed, audioSpeed: s.audioSpeed,
+      audioTrackNum: aiMessages.length ? s.audioTrackIndex+1 : 0, audioTrackTotal: aiMessages.length, audioTrackLabel,
+      audioProgressPct: s.audioProgress+'%',
+      dependencyGradient, chartPath, chartPoints, hasHoveredPoint, hoveredLabel,
+      dependencyInfoOpen: s.dependencyInfoOpen, toggleDependencyInfo: this.toggleDependencyInfo,
+      learningBalanceBars, insights: INSIGHTS,
+      resourceQuery: s.resourceQuery, setResourceQuery: this.setResourceQuery, filteredResources,
+      profileEditing: s.profileEditing, profileEditLabel: s.profileEditing?'Done':'Edit profile', toggleProfileEdit: this.toggleProfileEdit, profileStats,
+      perfByType, perfBySource, weakTopics, studyAdvice, trendPath, trendPoints, trendLabels,
+      settingsSection: s.settingsSection, settingsSections,
+      isAccountSection: s.settingsSection==='Account', isAppearanceSection: s.settingsSection==='Appearance', isPrivacySection: s.settingsSection==='Privacy',
+      isAiPrefSection: s.settingsSection==='AI Preferences', isResourceMgmtSection: s.settingsSection==='Resource Management',
+      isNotificationsSection: s.settingsSection==='Notifications', isDataExportSection: s.settingsSection==='Data & Export',
+      themeOptions, privacyToggles, responseStyleOptions, prefToggles,
+      customizeThemeOpts, customizeStyleOpts, customizeLevelOpts, customizeLangOpts, customizeTermOpts, customizePrefOpts,
+      guidelineLocation, setGuidelineLocation, practiceLocation: s.practiceLocation, setPracticeLocation: this.setPracticeLocation, locationOptions: LOCATION_OPTIONS,
+      mobileNavItems,
+      isStudentRole: s.role==='student', isTeacherRole: s.role==='teacher',
+      switchToTeacher: this.switchToTeacher, switchToStudent: this.switchToStudent,
+      teacherNavItems, teacherView: s.teacherView,
+      isOverviewView: s.teacherView==='Overview', isStudentsView: s.teacherView==='Students', isLeaderboardView: s.teacherView==='Leaderboard',
+      isAssignmentsView: s.teacherView==='Assignments', isAlertsView: s.teacherView==='Alerts', isAnnouncementsView: s.teacherView==='Announcements', isReportsView: s.teacherView==='Reports',
+      totalStudents, atRiskCount: atRiskStudents.length, classAvgAccuracy, classAvgDependency, classWeakTopics, recentAlerts, hasAlerts: recentAlerts.length>0,
+      teacherStudentQuery: s.teacherStudentQuery, setTeacherStudentQuery: this.setTeacherStudentQuery, filteredStudents,
+      leaderboard, alertsList, hasAlertsList: alertsList.length>0,
+      assignTopicOpts, assignDiffOpts, assignTypeOpts, assignTargetOpts, isIndividualTarget,
+      studentOptionsForAssign: STUDENTS.map(st => ({label:st.name, select: () => this.setAssignField('studentId', st.id), bg: st.id===s.assignForm.studentId?T.accentSoft:'transparent', color: st.id===s.assignForm.studentId?T.accent:T.textSecondary})),
+      assignDueDate: s.assignForm.dueDate, setAssignDueDate: (e) => this.setAssignField('dueDate', e.target.value),
+      addAssignment: this.addAssignment, assignmentsList, hasAssignments: assignmentsList.length>0,
+      announcementDraft: s.announcementDraft, setAnnouncementDraft: this.setAnnouncementDraft, sendAnnouncement: this.sendAnnouncement, announcements: s.announcements,
+      goAlertsView: () => this.setTeacherView('Alerts'),
+      hasStudentDetail: !!teacherDetail, studentDetail, closeStudentDetail: this.closeStudentDetail,
+      teacherNotesDraft: s.teacherNotesDraft, setTeacherNotesDraft: this.setTeacherNotesDraft, saveTeacherNotes: this.saveTeacherNotes,
+      stop: this.stop, rootRef: this.rootRef
+    };
+  }
+}
+</script>
+</body>
+</html>
